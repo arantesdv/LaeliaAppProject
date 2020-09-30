@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Laelia.apps.base',
     'Laelia.apps.care',
     'Laelia.apps.core',
+    'Laelia.apps.mind',
 ]
 
 MIDDLEWARE = [
