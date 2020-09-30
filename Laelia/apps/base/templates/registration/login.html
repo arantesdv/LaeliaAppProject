@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="m-5 p-5 card">
+        <form method="post" action="{% url 'base:login' %}" id="login-form">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Enviar" class="btn btn-sm bg-primary">
+        </form>
+    </div>
+
+{% endblock %}

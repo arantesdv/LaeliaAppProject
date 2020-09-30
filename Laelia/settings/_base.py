@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # own
+    'Laelia.apps.base',
+    'Laelia.apps.care',
+    'Laelia.apps.core',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +58,7 @@ ROOT_URLCONF = 'Laelia.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +72,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Laelia.wsgi.application'
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'laelia-maindb',
+        'USERNAME': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+    }
+}
+
 
 
 # Password validation

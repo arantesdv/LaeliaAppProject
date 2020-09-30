@@ -10,7 +10,7 @@
     <facet type="django" name="Django">
       <configuration>
         <option name="rootFolder" value="$MODULE_DIR$/Laelia" />
-        <option name="settingsModule" value="settings.py" />
+        <option name="settingsModule" value="settings/development.py" />
         <option name="manageScript" value="$MODULE_DIR$/manage.py" />
         <option name="environment" value="&lt;map/&gt;" />
         <option name="doNotUseTestRunner" value="false" />
@@ -20,11 +20,19 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.8 (venv)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (laelia)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Google App Engine SDK" level="project" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/templates" />
+        <option value="$MODULE_DIR$/Laelia/apps/care/templates" />
+        <option value="$MODULE_DIR$/Laelia/apps/base/templates" />
+        <option value="$MODULE_DIR$/Laelia/apps/core/templates" />
+      </list>
+    </option>
   </component>
 </module>
