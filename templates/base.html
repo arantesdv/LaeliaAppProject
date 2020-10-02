@@ -8,6 +8,9 @@
         <title>{% block title %} Laelia {% endblock title %}</title>
     </head>
     <body id="body">
+        {% block header %}
+            header
+        {% endblock %}
         {% block main %} {# início do main #}
             <div class="container-fluid row">
                 <div class="container col-4">

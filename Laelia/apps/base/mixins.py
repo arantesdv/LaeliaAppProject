@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 
-from .functions import FBase
+from .functions import funcTime
 
 from .fields import MinMaxFloatField
 
@@ -20,7 +20,6 @@ class MultiLingualNameMixin(models.Model):
 	en_name = models.CharField(_('English Name'), max_length=255, blank=True, null=True)
 	pt_name = models.CharField(_('Portuguese Name'), max_length=255, blank=True, null=True)
 	es_name = models.CharField(_('Spanish Name'), max_length=255, blank=True, null=True)
-	abrev = models.CharField(_('Abreviation'), max_length=25, blank=True, null=True)
 	_search_names = models.CharField(max_length=255, null=True, blank=True, editable=False)
 	
 	class Meta:
@@ -166,53 +165,7 @@ class MonthMixin(models.Model):
 		DECEMBER = 12, _('December')
 	
 	month = models.PositiveSmallIntegerField(choices=Months.choices, blank=True, null=True)
-	
 	class Meta: abstract = True
-
-
-class TimeLineMixing(models.Model):
-	age_at_event = MinMaxFloatField(min_value=0, max_value=100, blank=True, null=True)
-	event_date = models.DateField(blank=True, null=True)
-	notes = models.TextField(_('Notes'), blank=True, null=True)
-	
-	class Meta:
-		abstract = True
-	
-	@staticmethod
-	def age_from_date(self, date):
-		return ((date - self.birth_date) / FBase.one_year()).__round__(1)
-	
-	@staticmethod
-	def date_from_age(self, age=None):
-		if age: return FBase.today() - ((self.age - age) * FBase.one_year())
-	
-	@classmethod
-	def from_age(cls, age):
-		return cls(age_at_event=age)
-	
-	@classmethod
-	def from_date(cls, date):
-		return cls(date_at_event=date)
-	
-	@classmethod
-	def from_year(cls, year):
-		return cls(date_at_event=datetime.date(year=year, month=7, day=1))
-	
-	@classmethod
-	def from_year_month(cls, year, month):
-		return cls(date_at_event=datetime.date(year=year, month=month, day=1))
-	
-	def clean(self):
-		if self.event_date:
-			if self.event_date > (FBase.today() + FBase().int_to_days(int=1)): raise ValidationError(
-				_('The date cannot be greater then today'))
-		if self.age_at_event:
-			if self.relation.patient.age < self.age_at_event: raise ValidationError(
-				_('The Age at Event cannot be greater then patient age'))
-		if self.age_at_event and self.event_date:
-			self.age_at_event = TimeLineMixing.age_from_date(self=self.relation.patient, date=self.event_date)
-		if self.event_date:
-			self.age_at_event = TimeLineMixing.age_from_date(self=self.relation.patient, date=self.event_date)
 
 
 class PersonMixin(models.Model):
@@ -238,14 +191,14 @@ class BirthDateMixin(models.Model):
 	
 	@property
 	def age(self):
-		return ((FBase.today() - self.birth_date) / FBase.one_year()).__round__(1)
+		return ((funcTime('today').date() - self.birth_date) / funcTime(365)).__round__(1)
 	
 	def age_from_date(self, date=None):
 		if not date: date = datetime.date.today()
-		return ((date - self.birth_date) / FBase.one_year()).__round__(1)
+		return ((date - self.birth_date) / funcTime(365)).__round__(1)
 	
 	def date_from_age(self, age=None):
-		if age: return FBase.today() - ((self.age - age) * FBase.one_year())
+		if age: return funcTime('today') - ((self.age - age) * funcTime(365))
 
 
 class DeathDateMixin(models.Model):
@@ -290,7 +243,7 @@ class GenderMixin(models.Model):
 			return True
 		else:
 			return False
-
+		
 
 class PhenotypeMixin(models.Model):
 	class SkinColor(models.TextChoices):
@@ -315,3 +268,20 @@ class PhenotypeMixin(models.Model):
 	                              help_text=_('Natural color only'))
 	
 	class Meta: abstract = True
+	
+	
+class ProfessionMixin(models.Model):
+	class ProfessionType(models.TextChoices):
+		MEDICAL_DOCTOR = 'medical doctor', _('medical doctor')
+		NURSE = 'nurse', _('nurse')
+		PSYCHOLOGIST = 'psychologist', _('psychologist')
+	profession = models.CharField(_('Profession'), blank=True, null=True, max_length=50, choices=ProfessionType.choices)
+	specialty = models.CharField(_('Specialty'), blank=True, null=True, max_length=255)
+	subspecialty = models.CharField(_('Subspecialty'), blank=True, null=True, max_length=255)
+	register = models.CharField(_('Professional Register'), blank=True, null=True, max_length=100)
+	class Meta: abstract = True
+
+class EnterpriseMixin(models.Model):
+	name = models.CharField(_('Enterprise Name'), max_length=255)
+	class Meta: abstract = True
+

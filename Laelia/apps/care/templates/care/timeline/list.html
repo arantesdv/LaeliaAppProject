@@ -1,0 +1,22 @@
+{% extends 'care/patient/detail.html' %}
+
+{% block header %}
+    <h1>{{ relation.patient }}</h1>
+    <h4>{{ relation.professional }}</h4>
+
+{% endblock %}
+
+{% block sidebar %}
+    <a  href="{% url 'care:event-create' %}">ADICIONAR</a>
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for event in timelineevent_list %}
+            <li>
+                <a href="{% url event.get_absolute_url %}">{{ event.relation.patient }} {{ event.age_at_event }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

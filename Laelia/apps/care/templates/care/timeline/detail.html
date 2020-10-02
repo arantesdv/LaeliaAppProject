@@ -1,0 +1,16 @@
+{% extends 'care/patient/detail.html' %}
+
+{% block content %}
+    <div class="card">
+    <div class="card-title">
+        <a href="{% url 'care:event-update' timelineevent.pk %}">editar</a>
+    </div>
+    <div class="card-body">
+        <p>{{ timelineevent.relation.patient }}</p>
+       <p>{{ timelineevent.age_at_event }}</p>
+        <p>{{ timelineevent.event_type }}</p>
+       <p>{{ timelineevent.notes }}</p>
+    </div>
+    </div>
+
+{% endblock %}

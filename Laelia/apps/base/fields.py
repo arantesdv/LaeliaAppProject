@@ -1,11 +1,8 @@
 from functools import partial
 from itertools import groupby
 from operator import attrgetter
-
 from django.db import models
-from django.forms.models import ModelChoiceField, ModelChoiceIterator
-from django.utils.translation import gettext_lazy as _
-from . import functions
+from django.forms.models import ModelChoiceIterator, ModelChoiceField
 
 
 class MinMaxFloatField(models.FloatField):

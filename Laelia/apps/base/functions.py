@@ -1,39 +1,31 @@
 import datetime
+from django.utils.translation import gettext_lazy as _
 
-class TimeFunc:
+def funcTime(x):
+	if isinstance(x, str):
+		if x == 'today': return datetime.datetime.today()
+		elif x == 'this year': return datetime.date.today().year
+		elif x == 'this day': return datetime.date.today().day
+		elif x == 'this month': return datetime.date.today().month
+	elif isinstance(x, int):
+		return datetime.timedelta(days=x)
+	else: return None
 	
-	def today(self): return datetime.date.today()
-	
-	def this_year(self): return datetime.date.today().year
-	
-	def this_day(self): return datetime.date.today().day
-	
-	def this_month(self): return datetime.date.today().month
-	
-	def one_day(self): return datetime.timedelta(days=1)
-	
-	def one_week(self): return datetime.timedelta(days=7)
-	
-	def one_month(self): return datetime.timedelta(days=30)
 
-	def two_weeks(self): return datetime.timedelta(days=14)
-	
-	def tree_weeks(self): return datetime.timedelta(days=21)
-	
-	def four_weeks(self): return datetime.timedelta(days=28)
-	
-	def quarter_year(self): return datetime.timedelta(days=int(365/4))
-	
-	def half_year(self): return datetime.timedelta(days=int(365/2))
-	
-	def one_year(self): return datetime.timedelta(days=365)
-	
-	def actual_day(self): return datetime.date.today().day
-	
-	def actual_month(self): return datetime.date.today().month
-	
-	def actual_year(self): return datetime.date.today().year
-	
-	def next_year(self): return self.this_year() + 1
-	
-	class Meta: abstract = True
+def processVolumeTo_ml(unit):
+	if not unit: raise ValueError(_('You need input a unit.'))
+	if unit == ('ml' or 'mL'): value = 1
+	elif unit == ('cl' or 'cL'): value = 10
+	elif unit == ('dl' or 'dL'): value = 100
+	elif unit == ('l' or 'L'): value = 1000
+	return value, 'ml'
+
+def processWeightTo_mg(unit):
+	if not unit: raise ValueError(_('You need input a unit.'))
+	normVal = None
+	if unit == ('mg'): normVal = 1
+	elif unit == ('mcg' or 'μg'): normVal = 0.001
+	elif unit == ('cg'): normVal = 10
+	elif unit == ('dg'): normVal = 100
+	elif unit == ('g' or 'G'): normVal = 1000
+	return normVal, 'mg'
