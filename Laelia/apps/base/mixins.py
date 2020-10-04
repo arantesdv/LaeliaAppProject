@@ -1,19 +1,14 @@
 import datetime
 from urllib.parse import urlparse, urlunparse
-from datetime import date, timedelta
-from django.conf import settings
+from django.db.models.signals import post_save
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-from django.utils.safestring import mark_safe
-from django.template.loader import render_to_string
-from django.utils import timezone
-from django.http import JsonResponse
 from django.core.exceptions import ValidationError
-
+from django.conf import settings
 from .functions import funcTime
 
-from .fields import MinMaxFloatField
 
 
 class MultiLingualNameMixin(models.Model):
@@ -166,32 +161,62 @@ class MonthMixin(models.Model):
 	
 	month = models.PositiveSmallIntegerField(choices=Months.choices, blank=True, null=True)
 	class Meta: abstract = True
+	
+	
+class UserMixin(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+	class Meta: abstract = True
+	
+	def post_save_receiver(sender, instance, created, **kwargs):
+		print(f'O usuário {instance} foi salvo')
+	
+	post_save.connect(post_save_receiver, sender=settings.AUTH_USER_MODEL)
+	
+	def post_login(sender, request, user, **kwargs):
+		print(f'O usuário {user} acaba de fazer login')
+	
+	user_logged_in.connect(post_login)
+	
+	def post_logout(sender, request, user, **kwargs):
+		print(f'O usuário {user} acaba de fazer logout')
+	
+	user_logged_out.connect(post_logout)
 
 
-class PersonMixin(models.Model):
+class PersonMixin(UserMixin):
 	first_name = models.CharField(_("First name"), max_length=100)
 	last_name = models.CharField(_("Last name"), max_length=150)
+	_is_person_active = models.BooleanField(default=True, editable=False)
 	
 	class Meta: abstract = True
 	
+	
+	@property
+	def is_person_active(self):
+		return self._is_person_active
+	
+	@property
+	def search_names(self):
+		return f'{self.full_name} ; {self.full_name.upper()} ; {self.full_name.lower()} ; {slugify(self.full_name).replace("-", " ")}'
+	
 	def composed_name(self): return '%s %s' % (self.first_name.split()[0], self.last_name.split()[-1])
 	
+	@property
 	def full_name(self): return '%s %s' % (self.first_name, self.last_name)
 	
-	def name(self): return self.first_name.split()[0]
+	@property
+	def short_name(self): return self.first_name.split()[0]
 	
-	def __str__(self): return self.full_name()
+	def __str__(self): return self.full_name
 
 
 class BirthDateMixin(models.Model):
 	birth_date = models.DateField(_('Birth Date'))
 	
-	class Meta:
-		abstract = True
+	class Meta: abstract = True
 	
 	@property
-	def age(self):
-		return ((funcTime('today').date() - self.birth_date) / funcTime(365)).__round__(1)
+	def age(self): return ((funcTime('today').date() - self.birth_date) / funcTime(365)).__round__(1)
 	
 	def age_from_date(self, date=None):
 		if not date: date = datetime.date.today()
@@ -204,15 +229,12 @@ class BirthDateMixin(models.Model):
 class DeathDateMixin(models.Model):
 	_death_date = models.DateField(_('Death Date'), editable=False, blank=True, null=True)
 	
-	class Meta:
-		abstract = True
+	class Meta: abstract = True
 	
 	@property
 	def death_date(self):
-		if self._death_date:
-			return self._death_date
-		else:
-			return None
+		if self._death_date: return self._death_date
+		else: return None
 
 
 class GenderMixin(models.Model):
@@ -223,8 +245,7 @@ class GenderMixin(models.Model):
 	
 	gender = models.CharField(max_length=12, choices=Gender.choices, blank=True, null=True)
 	
-	class Meta:
-		abstract = True
+	class Meta: abstract = True
 	
 	def clean(self):
 		super(GenderMixin, self).clean()
@@ -232,18 +253,14 @@ class GenderMixin(models.Model):
 	
 	@property
 	def is_male(self):
-		if self.gender == self.Gender.MALE:
-			return True
-		else:
-			return False
+		if self.gender == self.Gender.MALE: return True
+		else: return False
 	
 	@property
 	def is_female(self):
-		if self.gender == self.Gender.FEMALE:
-			return True
-		else:
-			return False
-		
+		if self.gender == self.Gender.FEMALE: return True
+		else: return False
+
 
 class PhenotypeMixin(models.Model):
 	class SkinColor(models.TextChoices):
@@ -268,8 +285,8 @@ class PhenotypeMixin(models.Model):
 	                              help_text=_('Natural color only'))
 	
 	class Meta: abstract = True
-	
-	
+
+
 class ProfessionMixin(models.Model):
 	class ProfessionType(models.TextChoices):
 		MEDICAL_DOCTOR = 'medical doctor', _('medical doctor')
@@ -281,7 +298,52 @@ class ProfessionMixin(models.Model):
 	register = models.CharField(_('Professional Register'), blank=True, null=True, max_length=100)
 	class Meta: abstract = True
 
-class EnterpriseMixin(models.Model):
+
+class EnterpriseMixin(UserMixin):
 	name = models.CharField(_('Enterprise Name'), max_length=255)
 	class Meta: abstract = True
+	
+	def __str__(self):
+		return f'{self.name}'
+	
+	
+	
+class ComercialMixin(UserMixin):
+	name = models.CharField(max_length=200)
+	_is_active = models.BooleanField(default=False, editable=False)
+	class Meta: abstract = True
+	
+	
+	@property
+	def is_active(self): return self._is_active
+	
+	
+	def activate(self):
+		self._is_active = True
+		return print(f'O usuário comercial {self.name} foi ativado')
+	
+	
+	def deactivate(self):
+		self._is_active = False
+		return print(f'O usuário comercial {self.name} foi desativado')
 
+
+
+class ScheduleMixin(models.Model):
+	date = models.DateField()
+	hour = models.IntegerField(choices=[(x, f'{x}h') for x in range(0, 24)], default=8)
+	min = models.IntegerField(choices=[(x, f'{x}min') for x in range(0, 60, 5)], default=0)
+	duration = models.IntegerField(choices=[(x, f'{x}min') for x in range(15, 125, 15)], default=60)
+	class Meta: abstract = True
+	
+	@property
+	def start(self):
+		hour = datetime.timedelta(hours=self.hour)
+		min = datetime.timedelta(minutes=self.min)
+		total = hour + min
+		return total
+	
+	@property
+	def end(self):
+		duration = datetime.timedelta(minutes=self.duration)
+		return duration + self.start

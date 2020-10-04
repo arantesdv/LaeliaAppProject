@@ -1,9 +1,9 @@
 from django import forms
 
-from . models import TimeLineEvent
+from . models import Event
 
 
 class TimeLineEventModelForm(forms.ModelForm):
 	class Meta:
-		model = TimeLineEvent
+		model = Event
 		exclude = ['created']

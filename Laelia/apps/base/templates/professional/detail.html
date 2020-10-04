@@ -1,0 +1,15 @@
+{% extends 'base/base_base.html' %}
+
+{% block sidebar %}
+    <h2>{{ professional }}</h2>
+    <h6 class="bg-secondary text-white">PORTAL DO PROFISSIONAL</h6>
+{% endblock %}
+
+{% block content %}
+    <ul>
+    {% for relation in relations %}
+        <li><a href="{% url 'base:relation-detail'  relation.id %}">{{ relation.patient }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

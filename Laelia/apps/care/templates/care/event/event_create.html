@@ -1,0 +1,26 @@
+{% extends 'base_care.html' %}
+
+{% block subheader %}
+    <div class="container">
+        <a type="submit" class="" href="{% url 'care:event-create' relation.id %}">Novo Evento</a>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <h2>{{ relation.patient }}</h2>
+    <h6 class="bg-primary text-white">PORTAL DO PACIENTE</h6>
+    <div class="card">
+    <h6> NASCIMENTO: {{ relation.patient.birth_date }} </h6>
+    <h6> IDADE: {% if relation.patient.age > 1 %} {{ relation.patient.age }} anos {% else %} {{ relation.patient.age }} ano {% endif %}</h6>
+    <h6> ENDEREÇO: {{ relation.patient.full_address }} </h6>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <form method="post" action="{% url object.get_success_url %}">{% csrf_token %}
+     <h6>{{ form.event_type.label }}: {{ form.event_type }}</h6>
+    <p>{{ form.notes.label }}: {{ form.notes }}</p>
+        <input type="submit" value="Registrar">
+    </form>
+{% endblock %}

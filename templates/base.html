@@ -7,23 +7,38 @@
               integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <title>{% block title %} Laelia {% endblock title %}</title>
     </head>
-    <body id="body">
-        {% block header %}
-            header
-        {% endblock %}
-        {% block main %} {# início do main #}
-            <div class="container-fluid row">
-                <div class="container col-4">
-                    {% block sidebar %} {# início do sidebar #}
-                    {% endblock %} {# final do sidebar #}
-                </div>
-                <div class="container col-8">
-                    {% block content %} {# início do content #}
-                    {% endblock %} {# final do content #}
-                </div>
+    <body id="body" class="m-3">
+        <div class="card text-center" id="upheaderCard">
+            {% block upheader %}
+            {% endblock %}
+        </div>
+        <div class="card" id="headerCard">
+            {% block header %} {# início do header #}
+            {% endblock %} {# fim do header #}
+        </div>
+        <div class="card" id="subheaderCard">
+            {% block subheader %}
+            {% endblock %}
+        </div>
+        <div class="card-group" id="mainCard">
+            {% block main %} {# início do main #}
+            <div class="card col-3" id="sidebarCard">
+                {% block sidebar %} {# início do sidebar #}
+                {% endblock %} {# final do sidebar #}
             </div>
-        {% endblock %} {# final do sidebar #}
-
+            <div class="card col-9" id="contentCard">
+                {% block content %} {# início do content #}
+                {% endblock %} {# final do content #}
+            </div>
+            {% endblock %} {# final do main #}
+        </div>
+        {% block java %} {# inicio do java #}
+        {% endblock %} {# final do java #}
+        {% block bottom %} {# inicio do rodape #}
+            <div class="card fixed-bottom">
+            <h6>Endereço</h6>
+            </div>
+        {% endblock %} {# final do rodape #}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

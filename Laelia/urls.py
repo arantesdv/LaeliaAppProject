@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('Laelia.apps.base.urls')),
-    path('care/', include('Laelia.apps.care.urls')),
-    path('core/', include('Laelia.apps.core.urls')),
+    path('', include('Laelia.apps.base.urls', namespace='base')),
+    path('care/', include('Laelia.apps.care.urls', namespace='care')),
+    path('core/', include('Laelia.apps.core.urls', namespace='core')),
     path('admin/', admin.site.urls),
 ]

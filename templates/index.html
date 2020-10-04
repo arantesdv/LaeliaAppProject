@@ -1,9 +1,34 @@
 {% extends 'base.html' %}
 
+{% block header %}
+    <div class="jumbotron">
+        <div class="jumbotron-title">
+            <h1>Essência Psiquiatria</h1>
+            <h6>humano, real, vital</h6>
+        </div>
+    </div>
+{% endblock %}
+
 {% block sidebar %}
-    <h3>Titulo nível 3 no sidebar</h3>
+    <div class="card-group">
+    <div class="card">
+        <input type="button" href="" value="Paciente">
+    </div>
+    <div class="card">
+        <input type="button" href={% url 'base:professional-detail' professional_id %}"" value="Profissional">
+    </div>
+    <div class="card">
+        <input type="button" href="" value="Equipe">
+    </div>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <h3>Titulo nível 3 no content</h3>
+    <div class="card-group">
+    </div>
+{% endblock %}
+
+{% block bottom %}
+    <div class="card-group">
+    </div>
 {% endblock %}

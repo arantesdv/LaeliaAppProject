@@ -1,14 +1,20 @@
 import datetime
 from django.utils.translation import gettext_lazy as _
 
-def funcTime(x):
-	if isinstance(x, str):
-		if x == 'today': return datetime.datetime.today()
-		elif x == 'this year': return datetime.date.today().year
-		elif x == 'this day': return datetime.date.today().day
-		elif x == 'this month': return datetime.date.today().month
-	elif isinstance(x, int):
-		return datetime.timedelta(days=x)
+
+# about text
+
+
+# about time
+
+def funcTime(input):
+	if isinstance(input, str):
+		if input == 'today': return datetime.datetime.today()
+		elif input == 'this year': return datetime.date.today().year
+		elif input == 'this day': return datetime.date.today().day
+		elif input == 'this month': return datetime.date.today().month
+	elif isinstance(input, int):
+		return datetime.timedelta(days=input)
 	else: return None
 	
 

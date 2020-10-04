@@ -1,0 +1,26 @@
+{% extends 'base/base_base.html' %}
+
+{% block sidebar %}
+    <h2>{{ patient }}</h2>
+    <h6 class="bg-primary text-white">PORTAL DO PACIENTE</h6>
+    <div class="card">
+    <h6> NASCIMENTO: {{ patient.birth_date }} </h6>
+    <h6> IDADE: {% if patient.age > 1 %} {{ patient.age }} anos {% else %} {{ patient.age }} ano {% endif %}</h6>
+    <h6> ENDEREÇO: {{ patient.full_address }} </h6>
+    <h6> PROFISSIONAIS:
+        {% if professionals_list %}
+        <ul>
+            {% for professional in professionals_list %}
+            <li>{{ professional }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            Não há profissionais assistentes associados.
+        {% endif %}
+    </h6>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
