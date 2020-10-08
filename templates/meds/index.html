@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block upheader %}
+
+{% endblock %}
+
+{% block header %}
+        <div class="row p-1">
+    <div class="col-6">
+      <h2 class="d-inline">Laelia EHR</h2> {% if professional %} <p style="color: green" class="pt-2 d-inline">  {{ professional }}</p>  {% else %} <h6 style="color: red;">Você não esta logado como profissional de suporte.</h6> {% endif %}
+    </div>
+    <div class="col-6">
+    <ul class="nav justify-content-end d-flex align-items-center">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'meds:index' %}">meds index</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'meds:active-list' %}">listar ativos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'meds:active-create' %}">+  ativo</a>
+        </li>
+        {% if relation %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'base:prescription-create' relation.pk %}">Prescrever para {{ relation.patient }}</a>
+        </li>
+        {% endif %}
+    </ul>
+    </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div class=" text-center p-5">
+    <h6 class="">FARMACOTERAPIA</h6>
+    <p>Seção destinada à controle de ativos farmacêuticos, medicações comerciais e prescrições.</p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h6 style="color: #ba2121">Medicações Cadastradas</h6>
+    <ul>
+    {% for med in meds %}
+        <li>{{ med }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

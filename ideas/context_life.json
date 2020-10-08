@@ -1,0 +1,58 @@
+{
+  "context life": [
+    {"marital life":
+      {"status": [
+        "first relation",
+        "new relation",
+        "restart relation",
+        "relation conflict",
+        "relation stable",
+        "no relation"]}},
+    {"working life":
+      {"status": [
+        "satisfied with the job",
+        "stressive work context",
+        "difficulty working",
+        "fired from work",
+        "unemployed"]}},
+    {"school/academic life":
+      {"status": [
+        "satisfied with the job",
+        "stressive work context",
+        "difficulty working",
+        "fired from work",
+        "unemployed"]}},
+    {"social life":
+      {"status": [
+        "vida social intensa",
+        "vida social normal",
+        "poucos amigos",
+        "afastamento social",
+        "isolado socialmente"]}},
+    {"drug abuse":
+      {"status": [
+        "abuso de álcool",
+        "abuso de canabis",
+        "abuso de tabaco",
+        "abuso de solventes",
+        "abuso de LSD",
+        "abuso de cocaína",
+        "abuso de opióides"]}},
+    {"drug abuse":
+      {"status": [
+        "abuso de álcool",
+        "abuso de canabis",
+        "abuso de tabaco",
+        "abuso de solventes",
+        "abuso de LSD",
+        "abuso de cocaína",
+        "abuso de opióides"]}},
+    {"physical activity":
+      {"status": [
+        "pratica exercícios físicos diariamente",
+        "pratica exercícios físicos regularmente",
+        "pratica exercícios físicos semanalmente",
+        "pratica exercícios físicos ocasionalmente",
+        "não pratica ativiade física"]}}
+    ]
+}

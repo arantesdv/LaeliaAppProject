@@ -1,34 +1,74 @@
 {% extends 'base.html' %}
+{# este template é da página inicial #}
 
-{% block header %}
-    <div class="jumbotron">
-        <div class="jumbotron-title">
-            <h1>Essência Psiquiatria</h1>
-            <h6>humano, real, vital</h6>
-        </div>
-    </div>
+{% block upheader %}
+        {% if user %} Você esta logado como {{ user }} {% else %} Você não esta logado. <a href="{% url 'base:login' %}">Fazer Login.</a>{% endif %}
 {% endblock %}
+
 
 {% block sidebar %}
-    <div class="card-group">
-    <div class="card">
-        <input type="button" href="" value="Paciente">
-    </div>
-    <div class="card">
-        <input type="button" href={% url 'base:professional-detail' professional_id %}"" value="Profissional">
-    </div>
-    <div class="card">
-        <input type="button" href="" value="Equipe">
-    </div>
-    </div>
-{% endblock %}
+            {% if comercials %}
+               <div class="card p-2">
+               <div class="card-title h6 bg-primary text-white">
+                   [ com ]
+               </div>
+               <div class="card-body ul">
+                   {% for item in comercials %}
+                        <li><a href="{% url 'base:comercial-detail'  item.pk %}">{{ item }}</a></li>
+                   {% endfor %}
+               </div>
+               </div>
+            {% endif %}
 
-{% block content %}
-    <div class="card-group">
-    </div>
-{% endblock %}
+            {% if enterprises %}
+               <div class="card p-2">
+               <div class="card-title h6 bg-secondary text-white">
+                   [ ent ]
+               </div>
+               <div class="card-body ul">
+                   {% for item in enterprises %}
+                        <li><a href="{% url 'base:enterprise-detail'  item.pk %}">{{ item }}</a></li>
+                   {% endfor %}
+               </div>
+               </div>
+            {% endif %}
 
-{% block bottom %}
-    <div class="card-group">
-    </div>
+            {% if employees %}
+               <div class="card p-2">
+               <div class="card-title h6 bg-dark text-white">
+                   [ emp ]
+               </div>
+               <div class="card-body ul">
+                   {% for item in employees %}
+                        <li><a href="{% url 'base:employee-detail'  item.pk %}">{{ item }}</a></li>
+                   {% endfor %}
+               </div>
+               </div>
+           {% endif %}
+
+           {% if professionals %}
+               <div class="card p-2">
+               <div class="card-title h6 bg-primary text-white">
+                   [ prof ]
+               </div>
+               <div class="card-body ul">
+                   {% for professional in professionals %}
+                        <li><a href="{% url 'base:professional-detail'  professional.id %}">{{ professional }}</a></li>
+                   {% endfor %}
+               </div>
+               </div>
+           {% endif %}
+
+           {% if patients %}
+               <div class="card p-2">
+               <div class="card-title h6 bg-info text-white">
+                   [ pat ]
+               </div>
+               <div class="card-body ul">
+                   {% for item in patients %}
+                        <li><a href="{% url 'base:patient-detail'  item.id %}">{{ item }}</a></li>
+                   {% endfor %}
+               </div>
+               </div>
+           {% endif %}
 {% endblock %}

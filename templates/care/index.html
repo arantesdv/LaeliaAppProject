@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+
+{% block sidebar %}
+
+
+<div class="card p-2 text-center">
+    <h2><a href="{% url 'base:relation-detail' relation.id %}">{{ relation.patient }}</a></h2>
+    <div class="card">
+    <div class="card-group">
+        <div class="card text-center"><p class="p-0 m-0"> {{ relation.patient.birth_date }} </p></div>
+        <div class="card text-center"> <p class="p-0 m-0"> {% if relation.patient.age > 1 %} {{ relation.patient.age }} anos {% else %} {{ relation.patient.age }} ano {% endif %}</p></div>
+    </div>
+    <p class="p-0 m-0 text-center"> {{ relation.patient.full_address }} </p>
+    </div>
+    </div>
+{% endblock %}

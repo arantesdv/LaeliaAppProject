@@ -1,0 +1,32 @@
+{ "symptoms": [
+  {"mood": [
+    "humor depressivo",
+    "humor distímico",
+    "humor eutímico",
+    "humor hipomaníaco",
+    "humor eufórico",
+    "humor disfórico"]},
+  {"cognition": [
+    "grave prejuízo cognitivo",
+    "moderado prejuízo cognitivo",
+    "discreto prejuízo cognitivo",
+    "nega prejuízo cognitivo"]},
+  {"sleep": [
+    "sono superficial",
+    "sono pesado",
+    "sonolência diurna",
+    "insônia inicial",
+    "insônia intermediária",
+    "despertar matinal precoce"]},
+  {"apetite": [
+    "compulsão alimentar",
+    "apetite muito aumentado",
+    "apetite moderadamente aumentado",
+    "apetite levemente aumentado",
+    "apetite normal",
+    "apetite levemente reduzido",
+    "apetite moderamente reduzido",
+    "apetite muito reduzido",
+    "anorexia"]}
+]
+}

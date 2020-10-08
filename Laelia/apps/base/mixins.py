@@ -28,12 +28,15 @@ class MultiLingualNameMixin(models.Model):
 	
 	@property
 	def search_names(self):
+		self._search_names = f'{self.en_name} ; {self.pt_name} ; {self.es_name}'
 		return self._search_names
 	
 	def clean(self):
 		super(MultiLingualNameMixin, self).clean()
-		names = slugify(self.__str__())
-		self._search_names = names
+		if not self.pt_name:
+			raise ValidationError(_("It's necessary the name in portuguese"))
+		if not self._search_names:
+			self._search_names = self.search_names
 	
 	def __str__(self):
 		if self.pt_name:

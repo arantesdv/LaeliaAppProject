@@ -51,7 +51,7 @@ class TimeLineMixin(models.Model):
 		if self.event_date:
 			if self.event_date > (funcTime('today').date() + funcTime(1)): raise ValidationError(
 				_('The date cannot be greater then today'))
-		if self.age_at_event:
+		if self.age_at_event != None:
 			if self.relation.patient.age < self.age_at_event: raise ValidationError(
 				_('The Age at Event cannot be greater then patient age'))
 		if self.relation:
@@ -68,4 +68,25 @@ class EventTypeMixin(models.Model):
 		POSITIVE_MARK = 'positive mark', _('positive mark')
 		NEGATIVE_MARK = 'negative mark', _('negative mark')
 	event_type = models.CharField(choices=EventType.choices, blank=True, null=True, max_length=50)
+	class Meta: abstract = True
+
+
+class VisitTypeMixin(models.Model):
+	class VisitType(models.TextChoices):
+		FIRST_VISIT = 'first visit', _('first visit')
+		FOLLOW_UP = 'follow up', _('follow up')
+		NEW_COMPLAINT = 'new complaint', _('new complaint')
+		REVIST = 'revisit', _('revisit')
+	visit_type = models.CharField(choices=VisitType.choices, blank=True, null=True, max_length=50)
+	class Meta: abstract = True
+	
+	
+class PharmacotherapyMixin(models.Model):
+	class PharmacotherapyType(models.TextChoices):
+		PRESCRIPTION = 'prescription', _('prescription')
+		SIDE_EFFECT = 'side effect', _('side effect')
+		GOOD_RESPONSE = 'good response', _('good response')
+		NO_RESPONSE = 'no response', _('no response')
+	pharmacotherapy_report_type = models.CharField(choices=PharmacotherapyType.choices, blank=True, null=True, max_length=50)
+	comercial_drug = models.ForeignKey('recipe.ComercialDrug', on_delete=models.CASCADE)
 	class Meta: abstract = True

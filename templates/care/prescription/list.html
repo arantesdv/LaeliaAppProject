@@ -1,0 +1,19 @@
+{% extends 'meds/index.html' %}
+
+
+{% block sidebar %}
+    <div class="container text-center">
+        <h6>Prescrições para {{ relation.patient }}</h6>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card">
+    <div class="card-body">
+        {% for item in prescriptions %}
+            <li>{{ item }} <a href="{% url 'base:prescription-create' item.pk %}" class="">*</a></li>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

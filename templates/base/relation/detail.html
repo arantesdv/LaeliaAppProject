@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+
+
+{% block sidebar %}
+    <div class="card p-3 text-center">
+    <h2>{{ relation.patient }}</h2>
+    <div class="card">
+    <div class="card-group">
+        <div class="card text-center"><p class="p-0 m-0"> {{ relation.patient.birth_date }} </p></div>
+        <div class="card text-center"><p class="p-0 m-0"> {% if relation.patient.age > 1 %} {{ relation.patient.age }} anos {% else %} {{ relation.patient.age }} ano {% endif %}</p></div>
+    </div> <p class="p-0 m-0 text-center"> {{ relation.patient.full_address }} </p></div>
+    </div>
+    <div class="card-group">
+    <div class="card">
+    <a href="{% url 'care:event-create' relation.id %}" class="btn-sm btn-primary p-1 m-1">+ evento</a>
+    </div>
+    <div class="card">
+        <a href="{% url 'care:visit-create' relation.id %}" class="btn-sm btn-primary p-1 m-1">+ visita</a>
+    </div>
+    <div class="card">
+        <a href="{% url 'care:prescription-create' relation.id %}" class="btn-sm btn-primary p-1 m-1">+ prescrição</a>
+    </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card-group p-3" id="contentEventDetail">
+      {% if events %}
+          <div class="card p-2">
+          <div class="card-title">
+              <h6>EVENTOS</h6>
+          </div>
+          <div class="card-body">
+        <ul style="list-style-type: none;">
+            {% for event in events %}
+            <li>{{ event.age_at_event }}
+                {% if event.event_type == 'positive_mark' %} <span style="color: limegreen">{{ event.event_type }}</span>
+                {% elif event.event_type == 'negative_mark' %} <span style="color: darkblue">{{ event.event_type }}</span>
+                {% elif event.event_type == 'trauma' %} <span style="color: red">{{ event.event_type }}</span>
+                {% elif event.event_type == 'disease' %} <span style="color: gray">{{ event.event_type }}</span>
+                {% else %} <span style="color: orangered"> registro </span>
+                {% endif %}
+                <a href="{% url 'care:event-detail'  event.relation_id event.id %}">{{ event.notes|truncatechars:77 }}</a></li>
+            {% endfor %}
+        </ul>
+          </div>
+          </div>
+        {% else %}
+        <h5>Não há eventos registrados.</h5>
+        {% endif %}
+    <div class="card p-2" id="contentPrescription">
+        <div class="card-title">
+            <h6>PRESCRIÇÕES</h6>
+        </div>
+        <div class="card-body">
+            <ol>
+                {% for prescription in prescriptions %}
+                    <li>{{ prescription }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

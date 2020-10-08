@@ -1,0 +1,28 @@
+{% extends 'base/../index.html' %}
+
+{% block header %}
+    <h5 class="btn-secondary text-white">ÁREA CLÍNICA: PROFISSIONAL</h5>
+{% endblock %}
+
+
+{% block sidebar %}
+    <h2>{{ professional }}</h2>
+    <h6 class="bg-secondary text-white">PORTAL DO PROFISSIONAL</h6>
+    <H6>{{ professional.specialty }}</H6>
+    <H6>{{ professional.subspecialty }}</H6>
+    <H6>{{ professional.register }}</H6>
+    <H6>{{ professional.full_address }}</H6>
+
+{% endblock %}
+
+{% block content %}
+    <div class="card bg-light text-white">
+        <ul>
+    {% for relation in relations %}
+        <li><a href="{% url 'base:relation-detail'  relation.id %}">{{ relation.patient }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+
+
+{% endblock %}

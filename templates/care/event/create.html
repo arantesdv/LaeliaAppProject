@@ -1,0 +1,30 @@
+{% extends 'care/index.html' %}
+
+
+
+
+{% block content %}
+    <div class="card p-3">
+      <form method="POST" action="">{% csrf_token %}
+        <div class="card" style="display: none;">
+            {{ form.relation }}
+        </div>
+        <div class="card-group p-2">
+            <div class="card p-1">
+                {{ form.event_date.label }}: {{ form.event_date }}
+            </div>
+            <div class="card p-1">
+                {{ form.age_at_event.label }}: {{ form.age_at_event }}
+            </div>
+            <div class="card p-1">
+                {{ form.event_type.label }}: {{ form.event_type }}
+            </div>
+        </div>
+        <div class="card p-2">
+            {{ form.notes.label }}: {{ form.notes }}
+        </div>
+        <input type="submit" value="enviar" class="btn-primary btn-sm">
+    </form>
+    </div>
+
+{% endblock %}

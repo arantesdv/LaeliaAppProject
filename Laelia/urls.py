@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('Laelia.apps.base.urls', namespace='base')),
+    path('meds/', include('Laelia.apps.meds.urls', namespace='meds')),
     path('care/', include('Laelia.apps.care.urls', namespace='care')),
     path('core/', include('Laelia.apps.core.urls', namespace='core')),
     path('admin/', admin.site.urls),

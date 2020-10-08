@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    # external
+    'formtools',
     # own
     'Laelia.apps.base',
     'Laelia.apps.care',
+    'Laelia.apps.meds',
     'Laelia.apps.core',
 ]
 
@@ -74,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Laelia.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -84,7 +86,6 @@ DATABASES = {
         'HOST': 'localhost',
     }
 }
-
 
 
 # Password validation

@@ -1,0 +1,14 @@
+{% extends 'meds/index.html' %}
+
+
+{% block content %}
+    <div class="card p-3">
+        <form action="." method="POST">
+    {% csrf_token %}
+        <p class="d-inline">Nome do ativo: {{  form.pt_name }}
+            <input type="submit" value="salvar" class="btn-sm btn-success">
+        </p>
+    </form>
+    </div>
+
+{% endblock %}
