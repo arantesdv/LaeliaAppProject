@@ -1,4 +1,5 @@
-{% extends 'care/index.html' %}
+{% extends 'bootstrap_pages/index5.html' %}
+{% load bootstrap %}
 
 {% block head %}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -15,19 +16,15 @@
             <div class="col-3 p-1 text-right">{{ form.relation.label }}</div>
             <div class="col-9 p-1"> {{ form.relation }} </div>
         </div>
-            <script>
-            $(document).ready(function() {
-                $('.autocomplete_drugs').select2();
-            });
-    </script>
         <div class="row">
             <div class="col-3 p-1 text-right">{{ form.comercial_drug.label }}</div>
             <div class="col-9 p-1">
-                <select name="comercial_drug" id="id_comercial_drug" class="autocomplete_drugs">
+                <select name="comercial_drug" id="id_comercial_drug" class="autocomplete_drugs w-75">
                     {% for drug in comercial_drugs %}
                     <option value="{{ drug.id }}">{{ drug  }}</option>
                     {% endfor %}
                 </select>
+                <a href="{% url 'meds:drug-create' professional.pk %}">+ medicação</a>
             </div>
         </div>
         <div class="row">
@@ -47,11 +44,16 @@
             <div class="col-9 p-1">{{ form.duration }} </div>
         </div>
             <div class="row">
-            <div class="col-3 p-1 text-right"></div>
-            <div class="col-9 p-1"><input type="submit" value="+" class="btn-sm btn-success"></div>
+            <div class="col-3 p-1 text-right">{{ form.date.label }}</div>
+            <div class="col-9 p-1"> {{ form.date }}</div>
         </div>
+            <input type="submit" value="+" class="btn-sm btn-success d-inline">
 
         </div>
+                </div>
+
+            </form>
+
         <div class="card p-1">
             <div class="card-title">
                 <h5>Prescrições atuais</h5>
@@ -65,8 +67,6 @@
             </div>
         </div>
 
-        </div>
-    </form>
 
 
 {% endblock %}
@@ -76,7 +76,10 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script>
     $(document).ready(function() {
-        $('.autocomplete_drugs').select2();
+        $('.autocomplete_drugs').select2({
+            placeholder: "Selecione uma medicação",
+            allowClear: true
+        });
     });
     </script>
 

@@ -5,13 +5,6 @@
   </component>
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0001_initial.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0002_timelineevent_relation.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0003_auto_20201001_2212.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0004_timelineevent_event_type.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0005_auto_20201002_0218.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0006_auto_20201002_0513.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0007_delete_timelineevent.py" />
-    <file url="file://$PROJECT_DIR$/Laelia/apps/care/migrations/0008_timelineevent.py" />
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/__init__.py" />
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/async_await.py" />
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/asyncio.py" />
@@ -19,6 +12,10 @@
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/cooperation.py" />
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/greenlet_functions.py" />
     <file url="file://$PROJECT_DIR$/Laelia/asyncio/yeld_keyword.py" />
+    <file url="file://$PROJECT_DIR$/Laelia/staticfiles/css/style3.css" />
+    <file url="file://$PROJECT_DIR$/templates/base.html" />
+    <file url="file://$PROJECT_DIR$/templates/home.html" />
+    <file url="file://$PROJECT_DIR$/templates/index.html" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8 (laelia)" project-jdk-type="Python SDK" />
   <component name="PyPackaging">

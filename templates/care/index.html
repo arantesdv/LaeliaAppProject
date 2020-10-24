@@ -1,8 +1,7 @@
-{% extends 'index.html' %}
+{% extends 'bootstrap_pages/index5.html' %}
 
 
 {% block sidebar %}
-
 
 <div class="card p-2 text-center">
     <h2><a href="{% url 'base:relation-detail' relation.id %}">{{ relation.patient }}</a></h2>

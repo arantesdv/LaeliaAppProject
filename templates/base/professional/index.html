@@ -1,0 +1,62 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+
+
+{% block header %}
+        <div class="container-fluid row pt-1">
+            <h3 class="col-3 my-auto" style="color: white; text-shadow: black 1px 1px 1px;">{{ professional.sponsor }}</h3>
+            <h6 style="color: white; text-shadow: black 1px 1px 1px;" class="col-3 my-auto"><a href="{% url 'base:professional-detail' professional.pk %}" style="color: white; text-shadow: black 1px 1px 1px;">{{ professional.composed_name|upper }}</a></h6>
+            <ul class="nav justify-content-end col-6 my-auto" id="professionalNav" >
+                <li class="nav-item"><a href="{% url 'base:relation-list' professional.pk %}" class="nav-link text-white text-right">PACIENTES</a></li>
+                <li class="nav-item"><a href="{% url 'base:schedule-view' professional.pk %}" class="nav-link text-white text-right">AGENDA</a></li>
+            </ul>
+        </div>
+{% endblock %}
+
+
+{% block main %}
+    <div class="row container-fluid mx-auto">
+        <div class="col-3 container-fluid mx-auto">
+            {% block sidebar %}
+                <div class="container-fluid text-white" style="background-image: linear-gradient(to right, saddlebrown, #777777, saddlebrown)">
+                <div class="h4 p-0">{{ professional.full_name }}</div>
+                <div class=" p-0">
+                 <ul style="list-style-type: none;" class="pl-0">
+                    <li style="font-size: small;">{{ professional.register }}</li>
+                    <li style="font-size: small;">{{ professional.specialty }}</li>
+                    <li style="font-size: small;">{{ professional.subspecialty }}</li>
+                         <hr>
+                    <li style="font-size: small;">{{ professional.full_address }}</li>
+                    <li style="font-size: small;">{{ professional.main_phone }}</li>
+                </ul>
+                <div class="row">
+                    <div class="col-6 p-2 "> <div class="card p-2 text-center" style="color: black;">{% if professional.patients_count == 0 %} Nenhum paciente {% elif professional.patients_count == 1 %} 1 paciente {% else %} {{ professional.patients_count }} pacientes {% endif %}</div></div>
+                    <div class="col-6 p-2"><div class="card p-2 text-center" style="color: black;">{% if visits == None %} Nenhuma visita {% elif visits == 1 %} 1 visita {% else %} {{ visits }} visitas {% endif %}</div></div>
+                </div>
+
+                </div>
+                </div>
+
+            {% endblock %}
+        </div>
+        <div class=" col-9 container-fluid mx-auto">
+            {% block content %}
+                <div class="container-fluid row">
+                    <div class="container-fluid col-5"></div>
+                    <div class="container-fluid col-7"></div>
+                </div>
+            {% endblock %}
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block bottom %}
+    <div class="row text-white pt-1 pb-1" style="background-image: linear-gradient(to right, #333333, #777777, saddlebrown);">
+        <div class="col-6">{{ professional.sponsor.address }} {{ professional.sponsor.city }} {{ professional.sponsor.city.region.abrev }}</div>
+        <div class="col-6 text-right">{{ professional.sponsor.main_phone }}</div>
+    </div>
+{% endblock %}
+
+

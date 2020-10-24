@@ -1,0 +1,14 @@
+{% extends 'base/professional/patient/index.html' %}
+
+{% block visitContent %}
+    <div class="card">
+    <h6>Visita {{ visit.date }}</h6>
+    <div class="card-body">
+        <div class="card">{{ visit.subjective }}</div>
+        <div class="card">{{ visit.objective }}</div>
+        <div class="card">{{ visit.assessment }}</div>
+        <div class="card">{{ visit.plan }}</div>
+
+    </div>
+    </div>
+{% endblock %}

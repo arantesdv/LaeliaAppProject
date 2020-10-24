@@ -16,9 +16,14 @@ Including another URLconf
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
+from Laelia.apps.base.views import Home, LaeliaLogin, ProfileView, LaeliaLogout
 
 urlpatterns = [
-    path('', include('Laelia.apps.base.urls', namespace='base')),
+    path('', Home.as_view(), name='home'),
+    path('login/', LaeliaLogin.as_view(), name='login'),
+    path('accounts/profile/', ProfileView.as_view(), name='profile'),
+    path('logout/', LaeliaLogout.as_view(), name='logout'),
+    path('base/', include('Laelia.apps.base.urls', namespace='base')),
     path('meds/', include('Laelia.apps.meds.urls', namespace='meds')),
     path('care/', include('Laelia.apps.care.urls', namespace='care')),
     path('core/', include('Laelia.apps.core.urls', namespace='core')),

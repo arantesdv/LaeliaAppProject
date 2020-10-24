@@ -1,0 +1,16 @@
+{% extends 'base/professional/home.html' %}
+
+
+
+{% block content %}
+    <div class="card p-3">
+    <div class="card-title">
+        <p>Dia:  {{ object.date }}</p>
+        {% if object.patient %}
+        <h4>{{ object.patient }}</h4>
+        {% endif %}
+    </div>
+        <p>Duração: {{ object.start }} até {{ object.end }}</p>
+        <p>{{ object.notes }}</p>
+    </div>
+{% endblock %}

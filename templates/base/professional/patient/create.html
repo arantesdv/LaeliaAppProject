@@ -1,0 +1,33 @@
+{% extends 'bootstrap_pages/index5.html' %}
+{% load bootstrap %}
+
+{% block main %}
+    {% block auth %} {{ block.super }} {% endblock %}
+    <div class="container">
+            <h4 class="p-1" style="color: saddlebrown;">Cadastrar Paciente</h4>
+            <form action="" method="post" class="bg-light p-3">
+            {% csrf_token %}
+                <div class="container row">
+                    <div class="col-4">{{ form.first_name|bootstrap }}</div>
+                    <div class="col-4">{{ form.last_name|bootstrap }}</div>
+                    <div class="col-2">{{ form.gender|bootstrap }}</div>
+                    <div class="col-2">{{ form.birth_date|bootstrap }}</div>
+                </div>
+                <hr>
+                <div class="container row">
+                    <div class="col-4">{{ form.user|bootstrap }}</div>
+                    <div class="col-4">{{ form.main_phone|bootstrap }}</div>
+                    <div class="col-2">{{ form.skin_color|bootstrap }}</div>
+                    <div class="col-2">{{ form.hair_color|bootstrap }}</div>
+                </div>
+                <hr>
+                <div class="container row">
+                    <div class="col-6">{{ form.address|bootstrap }}</div>
+                    <div class="col-3">{{ form.neiborhood|bootstrap }}</div>
+                    <div class="col-3">{{ form.city|bootstrap }}</div>
+                </div>
+                <hr>
+                <input type="submit" value="salvar" class="float-right text-white" style="background: saddlebrown;">
+            </form>
+    </div>
+{% endblock %}

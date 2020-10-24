@@ -1,0 +1,13 @@
+{% extends 'meds/index.html' %}
+
+
+{% block med %}
+    <div class="card p-5">
+    <h6>ATUALIZAR ATIVO</h6>
+    <form  method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+        <input type="submit" value="atualizar">
+    </form>
+    </div>
+{% endblock %}

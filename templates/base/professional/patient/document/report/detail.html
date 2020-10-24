@@ -1,0 +1,18 @@
+{% extends 'base/professional/patient/detail.html' %}
+{% load bootstrap %}
+
+
+
+{% block content %}
+    <div class="container-fluid p-5">
+    <h4>Relatório Médico</h4>
+    <div class="card">
+        {{ object.concepts.all }}
+    </div>
+
+    </div>
+
+
+{% endblock %}
+
+

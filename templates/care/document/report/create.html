@@ -1,0 +1,29 @@
+{% extends 'bootstrap_pages/index5.html' %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="card p-3" style="background-image: linear-gradient(to right, saddlebrown,  darkorange)">
+<div class="h4 text-white">Relatório Médico</div>
+    <form action="" method="post">
+    {% csrf_token %}
+        <div class="card-group p-1">
+            <div class="card p-3">{{ form.report_type|bootstrap }}</div>
+            <div class="card p-3">{{ form.document_date|bootstrap }}</div>
+            <div class="card p-3">{{ form.days|bootstrap }}</div>
+            <div class="card p-3">{{ form.from_time|bootstrap }}</div>
+            <div class="card p-3">{{ form.to_time|bootstrap }}</div>
+        </div>
+        <div class="card-group p-1">
+            <div class="card p-3"></div>
+            <div class="card p-3"></div>
+        </div>
+        <div class="card-group p-1">
+            <div class="card p-3">{{ form.document_note|bootstrap }}</div>
+        </div>
+        <div class="container p-1">
+            <div class="container p-3"><input type="submit" value="salvar" class="float-right"></div>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

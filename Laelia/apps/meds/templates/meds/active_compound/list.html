@@ -1,0 +1,13 @@
+{% extends 'meds/index.html' %}
+
+
+
+{% block med %}
+    <div class="card">
+    <div class="card-body">
+        {% for item in actives %}
+            <li>{{ item }} <a href="{% url 'meds:active-update' professional.pk item.pk %}" class="">*</a></li>
+        {% endfor %}
+    </div>
+    </div>
+{% endblock %}

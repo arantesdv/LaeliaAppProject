@@ -1,0 +1,16 @@
+{% extends 'meds/index.html' %}
+
+
+{% block med %}
+    <div class="card-group">
+        <div class="card p-5">
+        <h6>ATIVO FARMACOLÓGICO: <a href="{% url 'meds:active-update'  professional.pk active_compound.pk%}" class="h4">{{ active_compound }}</a></h6>
+    </div>
+    <div class="card p-5">
+        <h6>LISTA DE ATIVOS</h6>
+        <div class="overflow-auto card p-1"><ul style="list-style-type: none;">{% for item in actives %} <li>{{ item }}</li>{% endfor %}</ul></div>
+
+    </div>
+    </div>
+
+{% endblock %}

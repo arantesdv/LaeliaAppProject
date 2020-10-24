@@ -21,44 +21,55 @@ class CompoundSetMixin(models.Model):
 
 class ComercialDrugMixin(MultiLingualNameMixin):
 	compound_sets = models.ManyToManyField('meds.CompoundSet', related_name='%(class)s_compound_sets')
-	total_content = models.FloatField(blank=True, null=True)
+	total_content = models.DecimalField(max_digits=7, decimal_places=1, blank=True, null=True)
 	presentation = models.CharField(max_length=20, blank=True, null=True)
 	dosage_form = models.CharField(max_length=20, blank=True, null=True)
 	volumes = models.IntegerField(blank=True, null=True, choices=[(x, f'{x}') for x in range(1,11)], default=1)
 	_name = models.CharField(max_length=255, blank=True, editable=False)
-
 	class Meta: abstract = True
 	
+	
 	@property
-	def name(self, *args, **kwargs):
-		self._name = self.__str__()
-		super(ComercialDrugMixin, self).save(*args, **kwargs)
+	def name(self):
+		self._name = f'{self.pt_name} {self.full_set} {self.content} {self.presentation}'.replace('.0', '')
 		return self._name
 	
 	def __str__(self):
-		return f'{self.pt_name} {self.full_set} {self.total_content if self.volumes is not None else self.total_content * self.volumes} {self.presentation}'.replace('.0', '')
+		return self.name
 	
 	@property
 	def full_set(self):
-		total_med = len(self.compound_sets.all())
 		med_list = self.compound_sets.all()
-		if total_med > 0:
-			if total_med == 1:
-				set = med_list[0]
-				full_set = f'({set.active_compound}) {set.strength_value} {set.strength_measure_unit}'
-			elif total_med == 2:
-				set1 = med_list[0]
-				set2 = med_list[1]
-				full_set = f'({set1.active_compound}/{set2.active_compound}) {set1.strength_value}{set1.strength_measure_unit}/{set2.strength_value}{set2.strength_measure_unit}'
-			elif total_med == 3:
-				set1 = med_list[0]
-				set2 = med_list[1]
-				set3 = med_list[2]
-				full_set = f'({set1.active_compound}/{set2.active_compound}/{set3.active_compound}) {set1.strength_value}{set1.strength_measure_unit}/{set2.strength_value}{set2.strength_measure_unit}/{set3.strength_value}{set3.strength_measure_unit}'
-			else:
-				set = med_list[0]
-				full_set = f'({set.active_compound}) {set.strength_value} {set.strength_measure_unit} + associações'
+		total_med = len(med_list)
+		if total_med == 1:
+			set = med_list[0]
+			full_set = f'({set.active_compound}) {set.strength_value} {set.strength_measure_unit}'
+		elif total_med == 2:
+			set1 = med_list[0]
+			set2 = med_list[1]
+			full_set = f'({set1.active_compound} {set1.strength_value}{set1.strength_measure_unit} + {set2.active_compound} {set2.strength_value}{set2.strength_measure_unit})'
+		elif total_med == 3:
+			set1 = med_list[0]
+			set2 = med_list[1]
+			set3 = med_list[2]
+			full_set = f'({set1.active_compound} {set1.strength_value}{set1.strength_measure_unit} + {set2.active_compound} {set2.strength_value}{set2.strength_measure_unit} + {set3.active_compound} {set3.strength_value}{set3.strength_measure_unit})'
+		else:
+			set = med_list[0]
+			full_set = f'({set.active_compound}) {set.strength_value}{set.strength_measure_unit} + associações'
 		return full_set
+	
+	@property
+	def content(self):
+		if self.total_content:
+			if self.volumes: content = self.volumes * self.total_content
+			else: content = self.total_content
+		return content
+	
+	
+	def save(self, *args, **kwargs):
+		self._name = self.name
+		self._search_names = self.search_names
+		super(ComercialDrugMixin, self).save(*args, **kwargs)
 	
 	
 
@@ -74,12 +85,12 @@ class PrescriptionDrugMixin(models.Model):
 
 
 class DoseMixin(models.Model):
-	dose = models.FloatField()
+	dose = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
 	class Meta: abstract = True
 
 
 class DosageRegimenMixin(models.Model):
-	dosage_regimen = models.IntegerField(choices=[(x, f'{x}x') for x in range(1,13)], default=1)
+	dosage_regimen = models.IntegerField(choices=[(x, f'{x}x') for x in range(1,13)], default=1, blank=True, null=True)
 	class Meta: abstract = True
 
 
@@ -106,4 +117,5 @@ class PrescriptionMixin(CareRelationMixin,
                         DurationMixin,
                         CreationModificationDatesBase,
                         UrlBase):
+	boxes = models.IntegerField(blank=True, null=True)
 	class Meta: abstract = True

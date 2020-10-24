@@ -4,9 +4,15 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from Laelia.apps.base.functions import funcTime
 from . mixins import MultiLingualNameMixin, UrlBase, CreationModificationDatesBase, PersonMixin, PhenotypeMixin, \
-    EnterpriseMixin, GenderMixin, BirthDateMixin, DeathDateMixin, ProfessionMixin, ComercialMixin, ScheduleMixin
+    EnterpriseMixin, GenderMixin, BirthDateMixin, DeathDateMixin, ProfessionMixin, SponsorMixin, ScheduleBase, \
+    AddressMixin, BaseNotesMixin, PhoneMixin, RelationBase
 
+
+class Facility(models.Model):
+    name = models.CharField(_('Facility Name'), max_length=255)
 
 class Nation(MultiLingualNameMixin):
     abrev = models.CharField(_('Nation Abreviation'), max_length=3)
@@ -30,41 +36,14 @@ class City(MultiLingualNameMixin):
         verbose_name_plural = _('Cities')
 
 
-class AddressMixin(models.Model):
-    address = models.CharField(_('Address'), blank=True, null=True, max_length=255)
-    neiborhood = models.CharField(_('Neiborhood'), blank=True, null=True, max_length=100)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
-    class Meta: abstract = True
-    
-    @property
-    def full_address(self):
-        full_address = ''
-        if self.address: full_address += f'{self.address}'
-        elif self.city: return f'{self.city} / {self.city.region.abrev}'
-        else: pass
-        if self.neiborhood: full_address += f', {self.neiborhood}'
-        full_address += f', {self.city} / {self.city.region.abrev}'
-        return full_address
-
-
-class PhoneMixin(models.Model):
-    main_phone = models.CharField(_('Phone (main)'), blank=True, null=True, max_length=20)
-    other_phone = models.CharField(_('Phone (other)'), blank=True, null=True, max_length=20)
-    class Meta: abstract = True
-
-
-class BaseNotesMixin(models.Model):
-    notes = models.TextField(blank=True, null=True)
-    class Meta: abstract = True
-
-
-class ComercialUser(ComercialMixin,
-                    AddressMixin,
-                    PhoneMixin,
-                    BaseNotesMixin):
+class Sponsor(SponsorMixin,
+              AddressMixin,
+              PhoneMixin,
+              BaseNotesMixin):
     class Meta:
         verbose_name = _('Comercial User')
         verbose_name_plural = _('Comercial Users')
+        constraints = [models.UniqueConstraint(fields=['user', 'name'], name='unique_comercial_user')]
     
     def __str__(self):
         return f'{self.name}'
@@ -85,6 +64,8 @@ class Patient(PersonMixin,
     class Meta:
         verbose_name = _('Patient')
         verbose_name_plural = _('Patients')
+        constraints = [models.UniqueConstraint(fields=['user', 'first_name', 'last_name', 'birth_date', 'gender'],
+                                               name='unique_%(class)s')]
         
     def get_absolute_url(self):
         return reverse('base:patient-detail', kwargs={'patient_id': self.id})
@@ -98,11 +79,13 @@ class Professional(PersonMixin,
                    PhoneMixin,
                    BaseNotesMixin,
                    CreationModificationDatesBase):
-    sponsor = models.ForeignKey(ComercialUser, on_delete=models.SET_NULL, blank=True, null=True)
+    sponsor = models.ForeignKey(Sponsor, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Professional')
         verbose_name_plural = _('Professionals')
+        constraints = [models.UniqueConstraint(fields=['user', 'first_name', 'last_name', 'birth_date', 'gender'],
+                                               name='unique_%(class)s')]
         permissions = [
             ('inactivate_professional', 'Can inactivate the professional.'),
             ('assist_professional', 'Can assist the professional.'),
@@ -115,6 +98,12 @@ class Professional(PersonMixin,
     def is_active(self):
         if self.sponsor: return self.sponsor.is_active
         else: return False
+        
+    @property
+    def patients_count(self):
+        patients_count = Relation.objects.filter(professional=self).count()
+        return patients_count
+    
 
 class Employee(PersonMixin,
                GenderMixin,
@@ -123,11 +112,13 @@ class Employee(PersonMixin,
                PhoneMixin,
                BaseNotesMixin,
                CreationModificationDatesBase):
-    sponsor = models.ForeignKey(ComercialUser, on_delete=models.SET_NULL, blank=True, null=True)
+    sponsor = models.ForeignKey(Sponsor, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Employee')
         verbose_name_plural = _('Employees')
+        constraints = [models.UniqueConstraint(fields=['user', 'first_name', 'last_name', 'birth_date', 'gender'],
+                                               name='unique_%(class)s')]
         permissions = [
             ('inactivate_employee', 'Can inactivate the professional.'),
             ('can_be_assistant', 'Can assist professional.'),
@@ -152,7 +143,7 @@ class Enterprise(EnterpriseMixin,
                  BaseNotesMixin):
     patients = models.ManyToManyField(Patient, related_name='%(class)s_patients')
     professionals = models.ManyToManyField(Professional, related_name='%(class)s_professionals')
-    sponsor = models.ForeignKey(ComercialUser, on_delete=models.SET_NULL, blank=True, null=True)
+    sponsor = models.ForeignKey(Sponsor, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Enterprise')
@@ -167,9 +158,9 @@ class Enterprise(EnterpriseMixin,
         else: return False
 
 
-class Relation(UrlBase):
-    patient = models.ForeignKey('base.Patient', on_delete=models.CASCADE)
-    professional = models.ForeignKey('base.Professional', on_delete=models.CASCADE)
+class Relation(RelationBase):
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['patient', 'professional'], name='unique_relation')]
     
     def __str__(self): return f'{self.patient}: {self.professional}'
     
@@ -180,14 +171,38 @@ class Relation(UrlBase):
         return slugify(f'{self.patient} xxxx {self.professional.composed_name()}').replace('-', '').replace('xxxx', '-')
 
 
-class Schedule(ScheduleMixin,
-               BaseNotesMixin):
-    relation = models.ForeignKey(Relation, on_delete=models.CASCADE)
+class Schedule(ScheduleBase):
+    
+    @classmethod
+    def schedule_30d_visit(cls, professional_id=0, patient_id=0):
+        days = 30
+        if professional_id and patient_id != 0:
+            schedules = Schedule.objects.filter(professional_id=professional_id, date__day=funcTime('today') + funcTime(days))
+            return cls(professional_id=professional_id, patient_id=patient_id)
     
     @staticmethod
-    def next_schedule_length_days(relation_id=0, days=0):
-        if relation_id != 0:
-            last_date = Schedule.objects.filter(relation_id=relation_id).last()
+    def next_schedule_length_days(professional_id=0, days=0):
+        if professional_id != 0:
+            last_date = Schedule.objects.filter(professional_id=professional_id).last()
             next_visit = last_date + days
             return next_visit
         else: return None
+        
+        
+        
+    def get_absolute_url(self):
+        return reverse('base:schedule-detail', kwargs={'professional_id': self.professional.pk, 'schedule_id': self.pk})
+    
+    def get_success_url(self):
+        return reverse('base:schedule-view', kwargs={'professional_id': self.professional.pk})
+
+
+class Symptom(MultiLingualNameMixin):
+    pass
+
+
+class Structure(MultiLingualNameMixin):
+    symptoms = models.ManyToManyField('base.Symptom', related_name='structure_symptoms', blank=True, symmetrical=True)
+
+class Organ(MultiLingualNameMixin):
+    structures = models.ManyToManyField('base.Structure', related_name='organ_structures', blank=True, symmetrical=True)

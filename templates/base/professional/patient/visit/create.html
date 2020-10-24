@@ -1,0 +1,62 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+{% block main %}
+    {% block auth %} {{ block.super }} {% endblock %}
+    <form method="POST" action="" class="form-control">{% csrf_token %}
+        <div class="form-row" id="row0" style="display: none;">{{ form.relation }}</div>
+        <div class="form-row" id="row1">
+            <div class="col-4 form-row" id="dateTimeDive">
+                <div class="col-4" id="dateDiv">
+                     <label for="id_date" class="text-center small">{{ form.date.label }}</label>
+                     <div class="card" id="id_date">{{ form.date }}</div>
+                 </div>
+                <div class="col-4 " id="fromTimeDiv">
+                    <label for id="id_from_time" class="text-center  small">{{ form.from_time.label }}</label>
+                    <div class="card" id="id_from_time">{{ form.from_time }}</div>
+                </div>
+                <div class="col-4 " id="toTimeDive">
+                    <label for id="id_to_time" class="text-center  small">{{ form.to_time.label }}</label>
+                    <div class="card" id="id_to_time">{{ form.to_time }}</div>
+                </div>
+            </div>
+            <div class="col-8 form-row" id="complaintDiv">
+                <div class="col-10">
+                    <label for="id_complaint" class="text-center w-100 small">{{ form.complaint.label }}</label>
+                    <div class="card">{{ form.complaint }}</div>
+                </div>
+                <div class="col-1">
+                    <label for="id_new_complaint" class="text-center w-100 small"> {{ form.new_complaint.label }}</label>
+                    <div class="text-center" id="id_new_complaint">{{ form.new_complaint }}</div>
+                </div>
+                <div class="col-1">
+                    <label for="id_urgency" class="text-center w-100 small">{{ form.urgency.label }}</label>
+                    <div class="text-center" id="id_urgency">{{ form.urgency }}</div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-row" id="row2">
+            <div class="col-6">
+                <label for="id_subjective">{{ form.subjective.label }}</label>
+                <div class="card" id="id_subjective"> {{ form.subjective }}</div>
+            </div>
+            <div class="col-3">
+                <label for="id_objective">{{ form.objective.label }}</label>
+                <div class="card" id="id_objective"> {{ form.objective }}</div>
+            </div>
+            <div class="col-3">
+                <label for="id_assessment">{{ form.assessment.label }}</label>
+                <div class="card" id="id_assessment"> {{ form.assessment }}</div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-row" id="row3">
+            <div class="col-6">
+                <label for="id_plan">{{ form.plan.label }}</label>
+                <div class="card" id="id_plan"> {{ form.plan }}</div>
+            </div>
+        </div>
+        <hr>
+            <input type="submit" value="enviar" class="button float-right">
+    </form>
+{% endblock %}

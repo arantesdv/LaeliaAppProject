@@ -1,0 +1,63 @@
+{% extends 'home.html' %}
+
+{% block header %}
+        <div class="container-fluid row pt-1">
+            <div class="col-3">
+                <h3 class="my-auto" style="color: white; text-shadow: black 1px 1px 1px;">{{ professional.full_name }}</h3>
+            </div>
+            <div class="col-6">
+            <ul class="nav justify-content-end" id="professionalNav" >
+                <li class="nav-item"><a href="{% url 'base:relation-list' professional.pk %}" class="nav-link text-white text-right">PACIENTES</a></li>
+                <li class="nav-item"><a href="{% url 'base:schedule-view' professional.pk %}" class="nav-link text-white text-right">AGENDA</a></li>
+            </ul>
+            </div>
+            <div class="col-3">
+            <h6 style="color: white; text-shadow: black 1px 1px 1px;" class="text-right pt-3"><a href="{% url 'base:professional-detail' professional.pk %}" class="text-white">{{ professional.composed_name|upper }}</a></h6>
+            </div>
+       </div>
+    <hr class="p-0 m-1" style="background: black;">
+{% endblock %}
+{% block subheader %}
+    <div class="container-fluid row pt-1">
+            <div class="col-4">
+                <h5 class="my-auto" style="color: white; text-shadow: black 1px 1px 1px;">{{ patient }}</h5>
+            </div>
+            <div class="col-4 my-auto">
+
+            </div>
+            <div class="col-4">
+                <ul class="nav my-auto">
+                    <li class="nav-item my-auto"><div class="nav-link my-auto"><a href="{% url 'care:visit-create' relation.pk %}" class="text-white button btn-sm my-auto">Nova Visita</a></div></li>
+                    <li class="nav-item my-auto"><div class="nav-link my-auto"><a href="{% url 'care:visit-list' relation.pk %}" class="text-white button btn-sm my-auto">Listar Visitas</a></div></li>
+                </ul>
+            </div>
+       </div>
+{% endblock %}
+
+{% block content %}
+    <hr class="pb-5">
+    <div class="row container-fluid pb-4">
+        <div class="container-fluid col-4"  style="background-image: linear-gradient(to right, saddlebrown, #777777)">
+            <h3 style="color: white; text-shadow: black 1px 1px 1px;" class="pt-2"> {{ relation.patient }}<small> ({{ relation.patient.age }} {% if relation.patient.age <= 1%} ano{% else %} anos {% endif %})</small></h3>
+            <hr>
+            <hr>
+            <div class="container row text-center text-white">
+                <div class="col-2"><small>ATESTADOS</small></div>
+                <div class="col-2"><a href="{% url 'care:visit-create' relation.pk %}" class="text-white" >[=]</a></div>
+            </div>
+            <div class="container"><a href="{% url 'care:report-create' relation.pk %}" class=" text-white" >RELATÓRIO</a></div>
+            <div class="container"><a href="{% url 'care:certificate-create' relation.pk %}" class=" text-white" >ATESTADO</a></div>
+            <div class="container"><a href="{% url 'care:prescription-create' relation.pk %}" class="text-white" >PRESCRIÇÃO</a></div>
+            <div class="container"><a href="{% url 'care:prescription-list' relation.pk %}" class="text-white" >PRESCRIÇÕES</a></div>
+        </div>
+        <div class="col-8 card-group container-fluid pt-1">
+            <div class="card pt-1 container-fluid"> <h6>LINHA VITAL</h6>{% if events %} <div class="card pt-1 container-fluid"><ul>{% for event in events %} <li>{{ event }}</li> {% endfor %}</ul></div>{% endif %}
+</div>
+            <div class="card pt-1 container-fluid"><h6>VISITAS</h6>{% if visits %} <div class="card pt-1 container-fluid"> <ul>{% for visit in visits %} <li>
+                <a href="{% url 'care:visit-detail' relation.pk visit.pk %}">{{ visit }}</a></li> {% endfor %}</ul></div>{% endif %}</div>
+          <div class="card pt-1 container-fluid"><h6>PRESCRIÇÕES</h6> {% if prescriptions %} <div class="card pt-1 container-fluid"> <ul>{% for item in prescriptions %} <li>{{ item }}</li> {% endfor %}</ul></div>{% endif %}</div>
+          <div class="card pt-1 container-fluid"><h6>RELACIONAMENTOS</h6>{% if patient_relations %} <div class="card pt-1 container-fluid"> <ul>{% for item in patient_relations %} <li>{{ item.professional }}</li> {% endfor %}</ul></div>{% endif %}
+        </div>
+        </div>
+    </div>
+{% endblock %}

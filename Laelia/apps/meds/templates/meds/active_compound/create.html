@@ -1,0 +1,15 @@
+{% extends 'meds/index.html' %}
+
+
+{% block med %}
+    <div class="card p-3">
+    <h6 class="bg-light p-1">Adicionar Composto Ativo</h6>
+        <form action="" method="POST">
+    {% csrf_token %}
+        <p class="d-inline">Nome do ativo: {{  form.pt_name }}
+            <input type="submit" value="salvar" class="btn-sm btn-success">
+        </p>
+    </form>
+    </div>
+
+{% endblock %}

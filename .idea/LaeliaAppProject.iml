@@ -29,9 +29,10 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/templates" />
+        <option value="$MODULE_DIR$/Laelia/apps/meds/templates" />
+        <option value="$MODULE_DIR$/Laelia/apps/core/templates" />
         <option value="$MODULE_DIR$/Laelia/apps/care/templates" />
         <option value="$MODULE_DIR$/Laelia/apps/base/templates" />
-        <option value="$MODULE_DIR$/Laelia/apps/core/templates" />
       </list>
     </option>
   </component>

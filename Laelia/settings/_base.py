@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     # external
     'formtools',
+    'bootstrapform',
+    'django_filters',
     # own
     'Laelia.apps.base',
     'Laelia.apps.care',
@@ -75,7 +77,9 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'Laelia.wsgi.application'
+
 
 DATABASES = {
     'default': {
@@ -106,9 +110,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+#######################################################################################################################
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
+#######################################################################################################################
+
 
 LANGUAGE_CODE = 'pt-br'
 
@@ -121,9 +127,38 @@ USE_L10N = True
 USE_TZ = True
 
 
+#######################################################################################################################
+# STATIC AND MEDIA FILES
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+#######################################################################################################################
+
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   # static files for site
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   # media directory for user uploaded files
+
+STATICFILES_DIRS = [
+    ('static', "static"),
+    ('staticfiles', 'Laelia/staticfiles'),
+]
+
+#######################################################################################################################
+# LOGIN AND LOGOUT URLS
+#######################################################################################################################
+
+LOGIN_URL = '/login/'
+
+LOGOUT_URL = '/logout/'
+
+#######################################################################################################################
+# TIME AND DATE FORMAT
+#######################################################################################################################
+
+SHORT_DATETIME_FORMAT = 'd/m/Y H:i'
+
+SHORT_DATE_FORMAT = 'd/m/Y'
+
+TIME_FORMAT = 'H:i'

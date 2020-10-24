@@ -1,0 +1,36 @@
+{% extends 'base/professional/patient/prescription/list.html' %}
+
+
+{% block prescriptionContent %}
+    <div class="container-fluid">
+    <div class="h6 p-1 bg-secondary text-white">Detalhes sobre prescrição</div>
+        <div class="row" id="patient">
+            <div class="col-4 small text-right">Paciente:</div>
+            <div class="col-8">{{ prescription.relation.patient }}</div>
+        </div>
+        <div class="row" id="comercial_drug">
+            <div class="col-4 small text-right">Medicação:</div>
+            <div class="col-8">{{ prescription.comercial_drug }}</div>
+        </div>
+        <div class="row" id="professional">
+            <div class="col-4 small text-right">Profissional:</div>
+            <div class="col-8">{{ prescription.relation.professional }} {% if prescription.relation.professional.is_doctor == True %} <p class="bg-success"> MÉDICO</p> {% endif %}</div>
+        </div>
+        <div class="row" id="dose">
+            <div class="col-4 small text-right">Dose:</div>
+            <div class="col-8">{{ prescription.dose }} {{ prescription.comercial_drug.dosage_form }}</div>
+        </div>
+        <div class="row" id="posology">
+            <div class="col-4 small text-right">Posologia:</div>
+            <div class="col-8">{{ prescription.get_dosage_regimen_display }} {{ prescription.get_frequency_display }}</div>
+        </div>
+        <div class="row" id="duration">
+            <div class="col-4 small text-right">Duração:</div>
+            <div class="col-8">{{ prescription.duration }}</div>
+        </div>
+        <div class="row" id="start_date">
+            <div class="col-4 small text-right">Data da Receita:</div>
+            <div class="col-8">{{ prescription.start_date }}</div>
+        </div>
+    </div>
+{% endblock %}

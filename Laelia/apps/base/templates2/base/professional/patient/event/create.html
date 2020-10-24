@@ -1,0 +1,23 @@
+{% extends 'base/professional/patient/event/list.html' %}
+
+{% load bootstrap %}
+
+
+{% block eventContent %}
+    <div class="card p-3">
+      <form method="POST" action="">{% csrf_token %}
+        <div class="card" style="display: none;">
+            {{ form.relation }}
+        </div>
+        <div class="card-group">
+            <div class="card p-3"> {{ form.event_date|bootstrap }}
+            </div>
+            <div class="card p-3"> {{ form.age_at_event|bootstrap }}
+            </div>
+        </div>
+        <div class="card p-3">{{ form.notes|bootstrap }}</div>
+        <input type="submit" value="enviar" class="btn-primary btn-sm">
+    </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base/index.html' %}
+
+{% block subheader %}
+    <div class="containter-fluid row bg-dark">
+        <div class="container-fluid col-4">
+            <h6 class="text-white pt-2">Profissional: {{ professional }}</h6>
+        </div>
+        <div class="container-fluid col-8">
+            <ul class="nav float-right" id="professionalNav">
+                <li class="nav-item"><a href="{% url 'base:professional-detail' professional.pk %}" class="nav-link text-white">PACIENTES</a></li>
+                <li class="nav-item"><a href="{% url 'base:professional-detail' professional.pk %}" class="nav-link text-white">AGENDA</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

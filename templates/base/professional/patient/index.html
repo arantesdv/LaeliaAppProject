@@ -1,0 +1,28 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+
+
+{% block main %}
+    <hr class="pb-5">
+    <div class="row container-fluid pt-5">
+        <div class="col-5  container-fluid pt-1">
+            {% block sidebar %}
+                {% block sideForm %}
+                {% endblock %}
+            {% endblock %}
+        </div>
+        <div class="col-7 container-fluid pt-1">
+            {% block content %}
+                {% block contentForm %}{% endblock %}
+                {% block visitContent %} {% endblock %}
+                {% block prescriptionContent %} {% endblock %}
+                {% block reportContent %} {% endblock %}
+                {% block certificateContent %} {% endblock %}
+                {% block eventContent %} {% endblock %}
+                {% block patientContent %} {% endblock %}
+                {% block professionalContent %} {% endblock %}
+            {% endblock %}
+        </div>
+    </div>
+    </div>
+{% endblock %}

@@ -40,7 +40,7 @@ class EnterpriseAdmin(admin.ModelAdmin):
 
 @admin.register(models.Relation)
 class RelationAdmin(admin.ModelAdmin):
-	pass
+	list_display = ['__str__', 'visits_count', 'trauma_count', 'loss_count']
 
 @admin.register(models.Employee)
 class EmployeeAdmin(admin.ModelAdmin):
@@ -62,7 +62,7 @@ def deactivate_comercial_user(modeladmin, request, queryset):
 deactivate_comercial_user.short_description = 'DESATIVAR CONTA'
 
 
-@admin.register(models.ComercialUser)
+@admin.register(models.Sponsor)
 class ComercialUserAdmin(admin.ModelAdmin):
 	actions = [activate_comercial_user, deactivate_comercial_user]
 	list_display = ['name', 'is_active']
@@ -71,3 +71,21 @@ class ComercialUserAdmin(admin.ModelAdmin):
 @admin.register(models.Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
 	list_display = ['date', 'hour', 'min', 'duration', 'start', 'end']
+
+
+@admin.register(models.Symptom)
+class SymptomAdmin(admin.ModelAdmin):
+	search_fields = ['search_names']
+
+
+
+@admin.register(models.Organ)
+class OrganAdmin(admin.ModelAdmin):
+	search_fields = ['search_names']
+
+
+
+
+@admin.register(models.Structure)
+class StructureAdmin(admin.ModelAdmin):
+	search_fields = ['search_names']

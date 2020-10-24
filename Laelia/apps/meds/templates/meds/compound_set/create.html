@@ -1,0 +1,16 @@
+{% extends 'meds/index.html' %}
+{% load bootstrap %}
+
+
+{% block med %}
+    <div class="card p-3">
+    <form action="" class="" method="post">{% csrf_token %}
+        <div class="card-group p-3">
+            <div class="card col-6 p-3">{{ form.active_compound|bootstrap }}</div>
+            <div class="card col-2 p-3">{{ form.strength_value|bootstrap }}</div>
+            <div class="card col-2 p-3">{{ form.strength_measure_unit|bootstrap }}</div>
+            <div class="card col-2 p-3"><input type="submit" value="novo set"></div>
+        </div>
+    </form>
+    </div>
+{% endblock %}

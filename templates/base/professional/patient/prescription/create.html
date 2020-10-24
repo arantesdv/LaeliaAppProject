@@ -1,0 +1,85 @@
+{% extends 'base/professional/patient/index.html' %}
+{% load bootstrap %}
+
+{% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+{% endblock %}
+
+
+
+
+{% block content %}
+    <div class="container-fluid">
+    <div class="h6">NOVA PRESCRIÇÃO</div>
+     {{ form.non_field_errors }}
+    <form action="" method="POST" class="">
+    {% csrf_token %}
+        <div class="container-fluid">
+        <div class="container-fluid">
+        <div class="" style="display: none;">{{ form.relation|bootstrap }}</div>
+        <div class="">
+            <label class="" for="id_comercial_drug"> <a href="{% url 'meds:drug-create' professional.pk %}"> (+) </a>{{ form.comercial_drug.label }}</label>
+            <div class="">
+                <select name="comercial_drug" id="id_comercial_drug" class="autocomplete_drugs w-100">
+                    {% for drug in comercial_drugs %}
+                    <option value="{{ drug.id }}">{{ drug  }}</option>
+                    {% endfor %}
+                </select>
+            <label class="help-block" for="id_comercial_drug">{{ form.erros }}</label>
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-6">{{ form.dose|bootstrap }}</div>
+        <div class="col-6">{{ form.dosage_regimen|bootstrap }}</div>
+        </div>
+        <div class="row">
+        <div class="col-6">{{ form.frequency|bootstrap }}</div>
+        <div class="col-6">{{ form.duration|bootstrap }} </div>
+        </div>
+        <div class="row">
+        <div class="col-6">{{ form.start_date|bootstrap }} </div>
+        <div class="col-6">{{ form.boxes|bootstrap }} </div>
+        </div>
+        <div class="text-right p-5">
+            <input type="submit" value="prescrever" class="btn-sm btn-success d-inline">
+        </div>
+
+        </div>
+                </div>
+
+            </form>
+    </div>
+
+{% endblock %}
+
+
+{% block sidebar %}
+        <div class="container-fluid">
+            <div class="">
+                <h5>Prescrições atuais para {{ relation.patient.composed_name }}</h5>
+            </div>
+            <div class="">
+                <ol>
+                    {% for item in prescriptions %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block java %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.autocomplete_drugs').select2({
+            placeholder: "Selecione uma medicação",
+            allowClear: true,
+        });
+    });
+    </script>
+
+{% endblock %}

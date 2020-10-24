@@ -1,0 +1,18 @@
+{% extends 'base/professional/patient/index.html' %}
+{% load bootstrap %}
+
+
+{% block main %}
+    {{ block.super }}
+
+    <div class="container-fluid p-5">
+    <form method="POST" action="" class="p-3">{% csrf_token %}
+        <div class="card" style="display: none;">{{ form.relation }}</div>
+            {{ form|bootstrap }}
+        <input type="submit" value="enviar" class="btn-primary btn-sm">
+    </form>
+    </div>
+        {% block content %}{% endblock %}
+    {% block sidebar %}{% endblock %}
+
+{% endblock %}

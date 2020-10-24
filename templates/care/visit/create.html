@@ -1,14 +1,15 @@
-{% extends 'care/index.html' %}
+{% extends 'bootstrap_pages/index5.html' %}
+{% load bootstrap %}
 
 
 {% block content %}
     <form method="POST" action="" class="p-3">{% csrf_token %}
         <div class="card" style="display: none;">{{ form.relation }}</div>
         <div class="card-group">
-            <div class="card">{{ form.event_date.label }}: {{ form.event_date }}</div>
-            <div class="card">{{ form.visit_type.label }}: {{ form.visit_type }}</div>
+            <div class="card p-3">{{ form.event_date|bootstrap }}</div>
+            <div class="card p-3"> {{ form.visit_type|bootstrap }}</div>
         </div>
-        <div class="card"> {{ form.notes.label }}: {{ form.notes }} </div>
+        <div class="card p-3"> {{ form.notes|bootstrap }} </div>
         <input type="submit" value="enviar" class="btn-primary btn-sm">
     </form>
 {% endblock %}

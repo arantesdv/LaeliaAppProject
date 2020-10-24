@@ -1,6 +1,7 @@
 import datetime
 from asgiref.sync import sync_to_async
 from django.urls import reverse_lazy
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render, reverse, redirect
 from django.shortcuts import get_object_or_404
@@ -12,12 +13,12 @@ from .models import ActiveCompound, ComercialDrug, CompoundSet, Prescription
 from .forms import ActiveCompoundModelForm, ComercialDrugModelForm, CompoundSetModelForm, PrescriptionModelForm
 
 
+
 class MedsHome(TemplateView):
 	template_name = 'meds/index.html'
 	
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		
 		if self.request.user: context['user'] = self.request.user
 		else: context['user'] = None
 		if context['user'] != None: context['professional'] = Professional.objects.get(user=context['user'])
@@ -66,6 +67,7 @@ class ActiveCompoundDetail(DetailView):
 		context = super().get_context_data(**kwargs)
 		context['active_compound'] = get_object_or_404(ActiveCompound, pk=self.kwargs['active_compound_id'])
 		context['professional'] = MedsHome.get_professional(request=self.request)
+		context['actives'] = ActiveCompound.objects.all()
 		return context
 
 
@@ -78,6 +80,7 @@ class ComecialDrugDetail(DetailView):
 		context = super().get_context_data(**kwargs)
 		context['comercial_drug'] = get_object_or_404(ActiveCompound, pk=self.kwargs['comercial_drug_id'])
 		context['professional'] = MedsHome.get_professional(request=self.request)
+		context['compound_sets'] = CompoundSet.objects.all()
 		return context
 
 
@@ -85,13 +88,14 @@ class ComecialDrugCreate(CreateView):
 	model = ComercialDrug
 	template_name = 'meds/comercial_drug/create.html'
 	pk_url_kwarg = 'comercial_drug_id'
-	form_class = ComercialDrug
+	form_class = ComercialDrugModelForm
 	object = None
 	
 	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+		context = super(ComecialDrugCreate, self).get_context_data(**kwargs)
 		context['today'] = datetime.date.today()
 		context['professional'] = MedsHome.get_professional(request=self.request)
+		context['compound_sets'] = CompoundSet.objects.all()
 		return context
 	
 	def get(self, request, *args, **kwargs):
@@ -106,6 +110,8 @@ class ComecialDrugCreate(CreateView):
 			object = form.save()
 			object.save()
 			self.object = object
+			if context['relation_id']:
+				return HttpResponseRedirect(reverse_lazy('care:prescription-create', kwargs={'relation_id': context['relation_id']}))
 			return HttpResponseRedirect(reverse_lazy('meds:active-list'))
 		context['form'] = form
 		return render(request, self.template_name, context)
@@ -136,7 +142,7 @@ class ActiveCompoundCreate(CreateView):
 			active_compound = form.save()
 			active_compound.save()
 			self.object = active_compound
-			return HttpResponseRedirect(reverse_lazy('meds:active-list'))
+			return HttpResponseRedirect(reverse_lazy('meds:active-detail', kwargs={'professional_id': context['professional'].pk, 'active_compound_id': self.object.pk}))
 		context['form'] = form
 		return render(request, 'meds/active_compound/create.html', context)
 
@@ -150,7 +156,7 @@ class ActiveCompoundList(ListView):
 	def get_context_data(self, *, object_list=None, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['professional'] = MedsHome.get_professional(request=self.request)
-		context['actives'] = MedsHome.all_active_compounds()
+		context['actives'] = ActiveCompound.objects.all()
 		return context
 	
 	def get(self, request, *args, **kwargs):
@@ -168,16 +174,17 @@ class ActiveCompoundUpdate(UpdateView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['professional'] = MedsHome.get_professional(request=self.request)
-		context['actives'] = MedsHome.all_active_compounds()
+		context['actives'] = ActiveCompound.objects.all()
 		return context
 
-	def get_success_url(self):
-		return reverse('meds:active-list')
+	def get_success_url(self, **kwargs):
+		context = self.get_context_data(**kwargs)
+		return reverse('meds:active-detail', kwargs={'professional_id': context['professional'].pk, 'active_compound_id': self.object.pk})
 
 
 class PrescriptionCreate(CreateView):
 	model = Prescription
-	template_name = 'care/prescription/create.html'
+	template_name = 'base/professional/patient/prescription/create.html'
 	pk_url_kwarg = 'prescription_id'
 	form_class = PrescriptionModelForm
 	object = None
@@ -188,28 +195,42 @@ class PrescriptionCreate(CreateView):
 		context['relation'] = Relation.objects.get(id=self.kwargs.get('relation_id'))
 		context['prescriptions'] = Prescription.objects.filter(relation_id=self.kwargs.get('relation_id'))
 		context['comercial_drugs'] = ComercialDrug.objects.all()
+		context['form'] = self.form_class({
+			'relation'  : context['relation'],
+			'start_date': datetime.date.today(),
+		})
 		return context
 	
-	def get(self, request, *args, **kwargs):
-		context = self.get_context_data(**kwargs)
-		context['form'] = PrescriptionModelForm({'relation': context['relation']})
-		return render(request, self.template_name, context)
 	
 	def post(self, request, *args, **kwargs):
 		context = self.get_context_data(**kwargs)
-		form = PrescriptionModelForm(request.POST)
+		form = self.form_class(request.POST, request=self.request, relation_id=self.kwargs.get('relation_id'))
 		if form.is_valid():
-			object = form.save()
+			object = form.save(commit=False)
 			object.save()
 			self.object = object
-			return HttpResponseRedirect(reverse_lazy('care:prescription-create', args=[self.kwargs.get('relation_id')]))
-		context['form'] = form
-		return render(request, self.template_name, context)
+			return HttpResponseRedirect(reverse_lazy('care:prescription-detail', kwargs={'relation_id': self.kwargs.get('relation_id'), 'prescription_id': self.object.pk}))
+		print(f'form erros: {form.errors}')
+		return render(request, self.template_name, {
+			'form': form,
+			'professional': context['professional'],
+			'relation': context['relation'],
+			'comercial_drugs': context['comercial_drugs'],
+			'prescriptions': context['prescriptions']
+		})
+	
+	def get_object(self, queryset=None):
+		return self.object
+	
+	def get_success_url(self, object=None, request=None, **kwargs):
+		context = self.get_context_data(**kwargs)
+		context['prescription'] = object
+		return render(request, 'base/professional/patient/prescription/detail.html', context)
 
 
 class PrescriptionList(ListView):
 	model = Prescription
-	template_name = 'care/prescription/list.html'
+	template_name = 'base/professional/patient/prescription/list.html'
 	object_list = None
 	
 	def get_context_data(self, *, object_list=None, **kwargs):
@@ -218,6 +239,7 @@ class PrescriptionList(ListView):
 		context['relation'] = Relation.objects.get(pk=self.kwargs.get('relation_id'))
 		context['prescriptions'] = Prescription.objects.filter(relation=context['relation'])
 		return context
+	
 
 
 class PrescriptionYearArchiveView(YearArchiveView):
@@ -227,14 +249,56 @@ class PrescriptionYearArchiveView(YearArchiveView):
 	
 	def get_queryset(self):
 		return Prescription.objects.filter(relation_id=self.kwargs.get('relation_id'))
+
+
+class CompoundSetCreate(CreateView):
+	model = CompoundSet
+	template_name = 'meds/compound_set/create.html'
+	pk_url_kwarg = 'compound_set_id'
+	form_class = CompoundSetModelForm
+	object = None
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['today'] = datetime.date.today()
+		context['professional'] = MedsHome.get_professional(request=self.request)
+		return context
+	
+	def get(self, request, *args, **kwargs):
+		context = self.get_context_data(**kwargs)
+		context['form'] = CompoundSetModelForm()
+		return render(request, 'meds/compound_set/create.html', context)
+	
+	def post(self, request, *args, **kwargs):
+		context = self.get_context_data(**kwargs)
+		form = CompoundSetModelForm(request.POST)
+		if form.is_valid():
+			compound_set = form.save()
+			compound_set.save()
+			self.object = compound_set
+			return HttpResponseRedirect(reverse_lazy('meds:index', kwargs={'professional_id': context['professional'].id}))
+		context['form'] = form
+		return render(request, 'meds/compound_set/create.html', context)
+
+
+class DrugUpdate(UpdateView):
+	type = 'update'
 	
 	
+class PrescriptionDetail(DetailView):
+	pk_url_kwarg = 'prescription_id'
+	template_name = 'base/professional/patient/prescription/detail.html'
+	model = Prescription
+	object = None
 	
-def drug_autocomplete(request):
-	if request.GET.get('q'):
-		q = request.GET['q']
-		data = ComercialDrug.objects.using('legacy').filter(pt_name__startswith=q).values_list('pt_name',flat=True)
-		json = list(data)
-		return JsonResponse(json, safe=False)
-	else:
-		HttpResponse("No cookies")
+	def get_object(self, queryset=None):
+		return Prescription.objects.get(pk=self.kwargs.get('prescription_id'))
+	
+	
+	def get(self, request, *args, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['relation'] = Relation.objects.get(pk=self.kwargs.get('relation_id'))
+		context['professional'] = context['relation'].professional
+		context['prescription'] = Prescription.objects.get(pk=self.kwargs.get('prescription_id'))
+		context['prescriptions'] = Prescription.objects.filter(relation__patient=context['relation'].patient)
+		return render(request, self.template_name, context)

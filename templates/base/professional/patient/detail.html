@@ -1,0 +1,28 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+{% block main %}
+
+    {% block auth %} {{ block.super }} {% endblock %}
+        <div class="container "  style="background-image: linear-gradient(to right, saddlebrown, #777777)">
+            <h3 style="color: white; text-shadow: black 1px 1px 1px;" class="pt-2"> <small>Paciente: </small>{{ relation.patient }}<small> ({{ relation.patient.age }} {% if relation.patient.age <= 1%} ano{% else %} anos {% endif %})</small></h3>
+            <hr>
+            <hr>
+            <div class="container row text-center text-white">
+                <div class="col-2"><small>ATESTADOS</small></div>
+                <div class="col-2"><a href="{% url 'care:visit-create' relation.pk %}" class="text-white" >[=]</a></div>
+            </div>
+            <div class="container"><a href="{% url 'care:report-create' relation.pk %}" class=" text-white" >RELATÓRIO</a></div>
+            <div class="container"><a href="{% url 'care:certificate-create' relation.pk %}" class=" text-white" >ATESTADO</a></div>
+            <div class="container"><a href="{% url 'care:prescription-create' relation.pk %}" class="text-white" >PRESCRIÇÃO</a></div>
+            <div class="container"><a href="{% url 'care:prescription-list' relation.pk %}" class="text-white" >PRESCRIÇÕES</a></div>
+        </div>
+        <div class="col-8 card-group container-fluid pt-1">
+            <div class="card pt-1 container-fluid"> <h6>LINHA VITAL</h6>{% if events %} <div class="card pt-1 container-fluid"><ul>{% for event in events %} <li>{{ event }}</li> {% endfor %}</ul></div>{% endif %}
+</div>
+            <div class="card pt-1 container-fluid"><h6>VISITAS</h6>{% if visits %} <div class="card pt-1 container-fluid"> <ul>{% for visit in visits %} <li>
+                <a href="{% url 'care:visit-detail' relation.pk visit.pk %}">{{ visit }}</a></li> {% endfor %}</ul></div>{% endif %}</div>
+          <div class="card pt-1 container-fluid"><h6>PRESCRIÇÕES</h6> {% if prescriptions %} <div class="card pt-1 container-fluid"> <ul>{% for item in prescriptions %} <li>{{ item }}</li> {% endfor %}</ul></div>{% endif %}</div>
+          <div class="card pt-1 container-fluid"><h6>RELACIONAMENTOS</h6>{% if patient_relations %} <div class="card pt-1 container-fluid"> <ul>{% for item in patient_relations %} <li>{{ item.professional }}</li> {% endfor %}</ul></div>{% endif %}
+        </div>
+        </div>
+{% endblock %}

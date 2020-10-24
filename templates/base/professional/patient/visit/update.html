@@ -1,0 +1,17 @@
+{% extends 'base/professional/patient/index.html' %}
+{% load bootstrap %}
+
+{% block content %}
+    <div class="card p-3">
+        <div class="card p-1">
+            <h6 class="p-1 bg-secondary text-white">Atualizar Visita</h6>
+            <div class="card-body">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form|bootstrap }}
+                </form>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

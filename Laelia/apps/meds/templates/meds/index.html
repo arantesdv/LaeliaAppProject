@@ -1,0 +1,48 @@
+{% extends 'base/professional/detail.html' %}
+
+
+
+
+
+    {% block sidebar %}
+    {{ block.super }}
+    {% endblock %}
+
+    {% block content %}
+        <div class="card p-5">
+        <div class="card-title h6 bg-secondary text-white p-1">MEDICAÇÕES: <a href="{% url 'meds:index' professional.pk %}">medhome</a></div>
+            <div class="card-group">
+            <div class="card p-5 ativos">
+                <h6>Ativos</h6>
+                <div class="card">
+                <a class="btn btn-primary p-1" href="{% url 'meds:active-create' professional.pk %}">adicionar </a></div>
+                <div class="card">
+                <a class="btn btn-success p-1" href="{% url 'meds:active-list' professional.pk %}">listar </a>
+                </div>
+            </div>
+            <div class="card p-5 sets">
+                <h6>Apresentação</h6>
+                <div class="card">
+                <a class="btn btn-primary p-1" href="{% url 'meds:compoundset-create' professional.pk %}">adicionar </a></div>
+                <div class="card">
+                <a class="btn btn-success p-1" href="{% url 'meds:compoundset-create' professional.pk %}">listar </a>
+                </div>
+            </div>
+            <div class="card p-5 drug">
+                <h6>Medicação</h6>
+                <div class="card">
+                    <a class="btn btn-primary p-1" href="{% url 'meds:drug-create' professional.pk %}">adicionar </a></div>
+
+                <div class="card">
+                <a class="btn btn-success p-1" href="{% url 'meds:compoundset-create' professional.pk %}">listar </a>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        <div class="card p-1">
+        {% block med %}{% endblock %}
+        </div>
+                        </div>
+
+    {% endblock %}

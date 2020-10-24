@@ -1,0 +1,57 @@
+{% extends 'bootstrap_pages/index5.html' %}
+{% load bootstrap %}
+
+
+{% block auth %} {% endblock %}
+
+{% block main %}
+    <div class="jumbotron">
+    <div class="jumbotron-title">
+        <h1>aiHealth <small>login</small></h1>
+    </div>
+    </div>
+    <div class="container-fluid text-center">
+
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+        {% else %}
+        <p>Please login to see this page.</p>
+        {% endif %}
+    {% endif %}
+    <div class="">
+        <div class="">
+        </div>
+        <div class="">
+        <form method="post" action="" id="login-form">{% csrf_token %}
+            <div class="container p-5">
+            <h5 class="text-center">Por favor digitar usuário e senha</h5>
+            <hr>
+            <div class="container p-2" id="usernameDiv">
+            <h6>{{ form.username.label }}</h6>
+            <div class=""> {{ form.username }}</div>
+            </div>
+            <div class="container p-2" id="passwordDiv">
+            <h6>{{ form.password.label }}</h6>
+           <div class="">{{ form.password }}</div>
+            </div>
+            <div class="container p-2">
+             <input type="submit" value="Enviar" class="btn btn-sm bg-primary" >
+            <input type="hidden" name="next" value="{{ next }}">
+            </div>
+
+            </div>
+
+
+        </form>
+        </div>
+    </div>
+    </div>
+    </div>
+
+{% endblock %}

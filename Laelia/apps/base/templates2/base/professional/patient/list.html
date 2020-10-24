@@ -1,0 +1,25 @@
+{% extends 'base/professional/index.html' %}
+
+
+    {% block main %}
+        <div class="row" style="background-image: linear-gradient(to right, saddlebrown, #777777);">gvvvvb
+                <div class="nav">
+                    <div class="nav-item"><div class="nav-link"><a href="{% url 'base:patient-relation-create' professional.pk %}" class="text-white">Novo Paciente</a></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid row">
+        <div class="col-6">
+            <h6 class="text-center">{{ relations_count }}</h6>
+            <ul>
+            {% for relation in relations %}
+            <li><a href="{% url 'base:relation-detail' relation.pk %}">{{ relation.patient }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col-6">
+            <div class="card p-3">pacientes recentes</div>
+            <div class="card p-3">pacientes ausentes há 6 meses</div>
+        </div>
+        </div>
+    {% endblock %}

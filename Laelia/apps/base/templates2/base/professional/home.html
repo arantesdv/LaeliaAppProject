@@ -1,0 +1,37 @@
+{% extends 'base/professional/index.html' %}
+
+
+
+
+{% block main %}
+
+                <div class="card p-5 text-white" style="background-image: linear-gradient(to right, saddlebrown, #777777)">
+                <div class="card-title p-0">Você fez login como: <br> <h4>{{ professional.full_name }}</h4></div>
+                <div class="card-body p-0">
+                 <ul style="list-style-type: none;" class="pl-0">
+                    <li style="font-size: small;">{{ professional.register }}</li>
+                    <li style="font-size: small;">{{ professional.specialty }}</li>
+                    <li style="font-size: small;">{{ professional.subspecialty }}</li>
+                         <hr>
+                    <li style="font-size: small;">{{ professional.full_address }}</li>
+                    <li style="font-size: small;">{{ professional.main_phone }}</li>
+                </ul>
+                <div class="row">
+                    <div class="col-6 p-2 "> <div class="card p-2 text-center" style="color: black;"><a href="{% url 'base:relation-list' professional.pk  %}"> {% if professional.patients_count == 0 %} Nenhum paciente {% elif professional.patients_count == 1 %} 1 paciente {% else %} {{ professional.patients_count }} pacientes {% endif %}</a></div></div>
+                    <div class="col-6 p-2"><div class="card p-2 text-center" style="color: black;">{% if visits == None %} Nenhuma visita {% elif visits == 1 %} 1 visita {% else %} {{ visits.count }} visitas {% endif %}</div></div>
+                </div>
+
+                </div>
+                </div>
+
+{% endblock %}
+
+
+{% block bottom %}
+    <div class="row text-white" style="background-image: linear-gradient(to right, #333333, #777777, saddlebrown);">
+        <div class="col-6">{{ professional.sponsor.address }} {{ professional.sponsor.city }} {{ professional.sponsor.city.region.abrev }}</div>
+        <div class="col-6 text-right">{{ professional.sponsor.main_phone }}</div>
+    </div>
+{% endblock %}
+
+

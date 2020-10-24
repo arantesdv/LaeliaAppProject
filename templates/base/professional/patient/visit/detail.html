@@ -1,0 +1,15 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+{% block main %}
+    {% block auth %} {{ block.super }} {% endblock %}
+    <div class="card">
+    <h6>Visita {{ object.date }}</h6>
+    <div class="card-body">
+        <div class="card">{{ object.subjective }}</div>
+        <div class="card">{{ object.objective }}</div>
+        <div class="card">{{ object.assessment }}</div>
+        <div class="card">{{ object.plan }}</div>
+
+    </div>
+    </div>
+{% endblock %}

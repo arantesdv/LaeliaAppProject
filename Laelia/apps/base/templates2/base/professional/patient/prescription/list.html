@@ -1,0 +1,26 @@
+{% extends 'base/professional/patient/index.html' %}
+
+
+
+        {% block sidebar %}
+            <div class="card">
+            <div class="card-title h6 bg-dark text-white p-1 text-center">PRESCRIÇÕES ATUAIS</div>
+            <div class="card-body">
+            <ol>
+                {% for item in prescriptions %}
+                    <li> <a href="{% url 'care:prescription-detail' relation.pk item.pk %}" class="p-1">{{ item }}</a></li>
+                {% endfor %}
+            </ol>
+            </div>
+            </div>
+        {% endblock %}
+
+
+        {% block prescriptionContent %}
+        <div class="card">
+            <div class="card">prescriçoes antigas</div>
+            <div class="card">alergias</div>
+            <div class="card">reações adversas</div>
+        </div>
+        {% endblock %}
+

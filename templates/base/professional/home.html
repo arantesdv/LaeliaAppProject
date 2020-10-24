@@ -1,0 +1,20 @@
+{% extends 'bootstrap_pages/index5.html' %}
+
+
+
+
+{% block main %}
+
+
+
+{% endblock %}
+
+
+{% block bottom %}
+    <div class="row text-white" style="background-image: linear-gradient(to right, #333333, #777777, saddlebrown);">
+        <div class="col-6">{{ professional.sponsor.address }} {{ professional.sponsor.city }} {{ professional.sponsor.city.region.abrev }}</div>
+        <div class="col-6 text-right">{{ professional.sponsor.main_phone }}</div>
+    </div>
+{% endblock %}
+
+

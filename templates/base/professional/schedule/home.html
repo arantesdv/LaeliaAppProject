@@ -1,0 +1,20 @@
+{% extends 'base/professional/home.html' %}
+
+
+
+{% block content %}
+            <div class="h4 text-white p-1" style="background-image: linear-gradient(to right, saddlebrown 33%, #777777 77%, #333333)">AGENDA</div>
+                <div class="nav justify-content-center">
+            <div class="nav-item"><a href="{% url 'base:schedule-create' professional.pk %}" class="nav-link" >Novo Evento</a></div>
+            <div class="nav-item"><a href="{% url 'base:schedule-visit-create' professional.pk %}" class="nav-link" >Nova Consulta</a></div>
+        </div>
+        {% block schedule %}
+            <div class="card p-1">
+                <ul>
+                {% for item in schedules %}
+                    <li class="p-1"><a href="{% url 'base:schedule-detail' item.professional.pk item.pk%}" class="">COMPROMISSO</a> {{ item.date }} das {{ item.start }} até {{ item.end }}: {{ item.patient }} {% if item.notes %}{{ item.notes }}{% endif %}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endblock %}
+{% endblock %}

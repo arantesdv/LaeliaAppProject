@@ -11,6 +11,35 @@ from .functions import funcTime
 
 
 
+
+
+class AddressMixin(models.Model):
+	address = models.CharField(_('Address'), blank=True, null=True, max_length=255)
+	neiborhood = models.CharField(_('Neiborhood'), blank=True, null=True, max_length=100)
+	city = models.ForeignKey('base.City', on_delete=models.SET_NULL, null=True, blank=True)
+	
+	class Meta:
+		abstract = True
+	
+	@property
+	def full_address(self):
+		full_address = ''
+		if self.address: full_address += f'{self.address}'
+		if self.neiborhood: full_address += f' {self.neiborhood}'
+		if self.city: full_address += f' {self.city} / {self.city.region.abrev}'
+		return full_address
+
+
+class PhoneMixin(models.Model):
+	main_phone = models.CharField(_('Phone (main)'), blank=True, null=True, max_length=20)
+	other_phone = models.CharField(_('Phone (other)'), blank=True, null=True, max_length=20)
+	class Meta: abstract = True
+
+
+class BaseNotesMixin(models.Model):
+	notes = models.TextField(blank=True, null=True)
+	class Meta: abstract = True
+
 class MultiLingualNameMixin(models.Model):
 	en_name = models.CharField(_('English Name'), max_length=255, blank=True, null=True)
 	pt_name = models.CharField(_('Portuguese Name'), max_length=255, blank=True, null=True)
@@ -24,29 +53,19 @@ class MultiLingualNameMixin(models.Model):
 	
 	@property
 	def name(self):
-		return self.__str__()
+		name = f'{self.pt_name}'
+		return name
 	
 	@property
 	def search_names(self):
-		self._search_names = f'{self.en_name} ; {self.pt_name} ; {self.es_name}'
-		return self._search_names
-	
-	def clean(self):
-		super(MultiLingualNameMixin, self).clean()
-		if not self.pt_name:
-			raise ValidationError(_("It's necessary the name in portuguese"))
-		if not self._search_names:
-			self._search_names = self.search_names
-	
+		names = f'{self.pt_name} '
+		if self.en_name: names += f'; {self.en_name} '
+		if self.es_name: names += f'; {self.es_name} '
+		return names
+
 	def __str__(self):
-		if self.pt_name:
-			return self.pt_name
-		elif self.en_name:
-			return self.en_name
-		elif self.es_name:
-			return self.es_name
-		else:
-			return 'Unnamed. Please verify MultiLingualNameMixin.'
+		return self.name
+
 
 
 class UrlBase(models.Model):
@@ -147,6 +166,21 @@ class CreationModificationDatesBase(models.Model):
 		print("test() from CreationModificationDatesBase called")
 
 
+class DateTimeBase(CreationModificationDatesBase):
+	date = models.DateField(blank=True, null=True)
+	from_date = models.DateField(blank=True, null=True)
+	from_time = models.TimeField(blank=True, null=True)
+	to_time = models.TimeField(blank=True, null=True)
+	to_date = models.DateField(blank=True, null=True)
+	class Meta: abstract = True
+	
+	@property
+	def min_duration(self):
+		if self.from_time and self.to_time:
+			duration = self.from_time - self.to_time
+			return duration.min
+
+
 class MonthMixin(models.Model):
 	class Months(models.IntegerChoices):
 		JANUARY = 1, _('January')
@@ -167,8 +201,9 @@ class MonthMixin(models.Model):
 	
 	
 class UserMixin(models.Model):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
 	class Meta: abstract = True
+	
 	
 	def post_save_receiver(sender, instance, created, **kwargs):
 		print(f'O usuário {instance} foi salvo')
@@ -191,8 +226,9 @@ class PersonMixin(UserMixin):
 	last_name = models.CharField(_("Last name"), max_length=150)
 	_is_person_active = models.BooleanField(default=True, editable=False)
 	
-	class Meta: abstract = True
-	
+	class Meta:
+		abstract = True
+
 	
 	@property
 	def is_person_active(self):
@@ -308,10 +344,9 @@ class EnterpriseMixin(UserMixin):
 	
 	def __str__(self):
 		return f'{self.name}'
-	
-	
-	
-class ComercialMixin(UserMixin):
+
+
+class SponsorMixin(UserMixin):
 	name = models.CharField(max_length=200)
 	_is_active = models.BooleanField(default=False, editable=False)
 	class Meta: abstract = True
@@ -331,12 +366,20 @@ class ComercialMixin(UserMixin):
 		return print(f'O usuário comercial {self.name} foi desativado')
 
 
+class PatientMixin(models.Model):
+	patient = models.ForeignKey('base.Patient', on_delete=models.SET_NULL, blank=True, null=True)
+	class Meta: abstract = True
+	
+class ProfessionalMixin(models.Model):
+	professional = models.ForeignKey('base.Professional', on_delete=models.SET_NULL, blank=True, null=True)
+	class Meta: abstract = True
 
-class ScheduleMixin(models.Model):
+
+class ScheduleBase(ProfessionalMixin, PatientMixin, BaseNotesMixin):
 	date = models.DateField()
-	hour = models.IntegerField(choices=[(x, f'{x}h') for x in range(0, 24)], default=8)
-	min = models.IntegerField(choices=[(x, f'{x}min') for x in range(0, 60, 5)], default=0)
-	duration = models.IntegerField(choices=[(x, f'{x}min') for x in range(15, 125, 15)], default=60)
+	hour = models.IntegerField(choices=[(x, f'{x} h') for x in range(0, 24)], default=8)
+	min = models.IntegerField(choices=[(x, f'{x} min') for x in range(0, 60, 15)], default=0)
+	duration = models.IntegerField(choices=[(x, f'{x} h') for x in range(15, 125, 15)], default=60)
 	class Meta: abstract = True
 	
 	@property
@@ -350,3 +393,52 @@ class ScheduleMixin(models.Model):
 	def end(self):
 		duration = datetime.timedelta(minutes=self.duration)
 		return duration + self.start
+	
+	@property
+	def min_duration(self):
+		duration = datetime.timedelta(minutes=self.duration)
+		return duration.min
+
+
+
+class RelationBase(ProfessionalMixin, PatientMixin, CreationModificationDatesBase, UrlBase):
+	enterprise = models.ForeignKey('base.Enterprise', on_delete=models.SET_NULL, blank=True, null=True)
+	start_date = models.DateField(blank=True, null=True)
+	class Meta: abstract = True
+
+	def clean(self):
+		super(RelationBase, self).clean()
+		if not self.professional: raise ValidationError(_('You need a professional to save a relation'))
+		if not self.patient: raise ValidationError(_('You need a patient to save a relation'))
+	
+	
+	@property
+	def local_site_full_address(self):
+		if self.enterprise: return self.enterprise.full_address
+		else: return self.professional.full_address
+		
+		
+	@property
+	def local_site_name(self):
+		if self.enterprise: return self.enterprise.name
+		else: return self.professional.full_name
+		
+	@property
+	def local_site_phone(self):
+		if self.enterprise: return self.enterprise.main_phone
+		else: return self.professional.main_phone
+		
+	@property
+	def visits_count(self):
+		from Laelia.apps.care.models import Visit
+		return Visit.objects.filter(relation=self).count()
+	
+	@property
+	def trauma_count(self):
+		from Laelia.apps.care.models import Event
+		return Event.objects.filter(relation=self, event_type='trauma').count()
+	
+	@property
+	def loss_count(self):
+		from Laelia.apps.care.models import Event
+		return Event.objects.filter(relation=self, event_type='loss').count()

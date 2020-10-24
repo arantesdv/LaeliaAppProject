@@ -1,0 +1,29 @@
+{% extends 'base/professional/schedule/home.html' %}
+{% load bootstrap %}
+
+
+{% block schedule %}
+    <div class="card p-5">
+    <div class="card-title h4 text-white p-1" style="background-image: linear-gradient(to right, saddlebrown 7%, #333333 77%, #777777)">Agendar Consulta</div>
+        <form action="" method="post">
+        {% csrf_token %}
+            <p style="display: none;">{{ form.professional }}</p>
+            <div class="card-group p-1 bg-light">
+           <div class="card p-1">{{ form.patient|bootstrap }}</div>
+            </div>
+            <div class="card-group p-1">
+                <div class="card p-1">{{ form.date|bootstrap }}</div>
+                <div class="card p-1">{{ form.hour|bootstrap }}</div>
+                <div class="card p-1">{{ form.min|bootstrap }}</div>
+                <div class="card p-1">{{ form.duration|bootstrap }}</div>
+            </div>
+            <div class="card-group p-1">
+            <div class="card p-1">{{ form.notes|bootstrap }}
+            </div>
+            </div>
+
+        <input type="submit" value="agendar">
+        <input type="hidden" value="{{ next }}">
+        </form>
+    </div>
+{% endblock %}

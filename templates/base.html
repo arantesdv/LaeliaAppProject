@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="pt-br">
     <head>
         <meta charset="utf-8" />
@@ -7,42 +8,43 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
               integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <title>{% block title %} Laelia {% endblock title %}</title>
-
         {% block head %}
         {% endblock %}
     </head>
-    <body id="body" class="">
-    <div class="container-fluid p-3">
-            {% block upheader %}
-            {% endblock %}
+    <body id="body">
+        {% block jumbotron %}
+         <div class="jumbotron jumbotron-fluid pt-3 pb-3" id="headerDiv" style="background-image: linear-gradient(to right, #777777, saddlebrown, #333333, saddlebrown, #777777)">
             {% block header %} {# início do header #}
             {% endblock %} {# fim do header #}
             {% block subheader %}
             {% endblock %}
-        <div class="card-group p-1" id="mainCard">
-            {% block main %} {# início do main #}
-            <div class="card col-3 p-1" id="sidebarCard">
-                {% block sidebar %} {# início do sidebar #}
-                {% endblock %} {# final do sidebar #}
+         </div>
+        {% endblock %}
+
+         <div class="container-fluid">
+        {% block main %} {# início do main #}
+            <div class="container-fluid row" id="mainDiv">
+                <div class="container-fluid col-4" id="sidebarDiv">
+                    {% block sidebar %} {# início do sidebar #}
+                    {% endblock %} {# final do sidebar #}
+                </div>
+                <div class="container-fluid col-8" id="contentDiv">
+                    {% block content %} {# início do content #}
+                    {% endblock %} {# final do content #}
+                </div>
             </div>
-            <div class="card col-9 p-1" id="contentCard">
-                {% block content %} {# início do content #}
-                {% endblock %} {# final do content #}
-            </div>
-            {% endblock %} {# final do main #}
-        </div>
-        {% block bottom %} {# inicio do rodape #}
-            <div class="card fixed-bottom p-1">
-            <h6>Endereço</h6>
-            </div>
-        {% endblock %} {# final do rodape #}
+        {% endblock %} {# final do main #}
     </div>
-        {% block java %} {# inicio do java #}
+        <div class="container fixed-bottom bg-light" id="bottomDiv">
+            {% block bottom %} {# inicio do rodape #}
+            {% endblock %} {# final do rodape #}
+         </div>
         <!-- JS, Popper.js, and jQuery -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+        {% block java %} {# inicio do java #}
         {% endblock %} {# final do java #}
     </body>
-
 </html>
